@@ -41,11 +41,11 @@ public class ProductServiceImpl implements ProductService {
         PdfWriter.getInstance(document, outputStream);
         document.open();
 
-        PdfPTable table = new PdfPTable(1);
+        PdfPTable table = new PdfPTable(4);
 
         Phrase headerPhrase = new Phrase("Produtos");
-
         PdfPCell header = new PdfPCell(headerPhrase);
+        header.setColspan(3);
         header.setHorizontalAlignment(Element.ALIGN_CENTER);
         header.setVerticalAlignment(Element.ALIGN_CENTER);
         header.getPhrase().getFont().setSize(16);
@@ -53,14 +53,23 @@ public class ProductServiceImpl implements ProductService {
         header.setBackgroundColor(BaseColor.LIGHT_GRAY);
         header.setPadding(10f);
 
+        PdfPCell header2 = new PdfPCell();
+        header2.setColspan(1);
+
         table.addCell(header);
+        table.addCell(header2);
 
 
         for (Product product : productList) {
             PdfPCell cell = new PdfPCell();
+            PdfPCell cellId = new PdfPCell();
+            cell.setColspan(3);
             cell.setPadding(5f);
             cell.setPhrase(new Phrase(product.getName()));
             table.addCell(cell);
+            cellId.setColspan(1);
+            cellId.setPhrase(new Phrase(String.valueOf(product.getId())));
+            table.addCell(cellId);
         }
 
         document.add(table);
@@ -68,4 +77,5 @@ public class ProductServiceImpl implements ProductService {
 
         return outputStream.toByteArray();
     }
+
 }
