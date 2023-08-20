@@ -1,5 +1,6 @@
 package com.shoppinglist.shoppinglist.domain.entities;
 
+import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -14,17 +15,24 @@ public class Product {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
+    private UrgencyLevel urgencyLevel;
+
     @CreationTimestamp
     private Date createdAt;
 
     public Product() {
     }
 
-    public Product(Long id,
-                   String name,
-                   Date createdAt) {
+    public Product(
+            Long id,
+            String name,
+            UrgencyLevel urgencyLevel,
+            Date createdAt) {
         this.id = id;
         this.name = name;
+        this.urgencyLevel = urgencyLevel;
         this.createdAt = createdAt;
     }
 
@@ -42,6 +50,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public UrgencyLevel getUrgencyLevel() {
+        return urgencyLevel;
+    }
+
+    public void setUrgencyLevel(UrgencyLevel urgencyLevel) {
+        this.urgencyLevel = urgencyLevel;
     }
 
     public Date getCreatedAt() {

@@ -1,10 +1,10 @@
 package com.shoppinglist.shoppinglist.repository;
 
 import com.shoppinglist.shoppinglist.domain.entities.Product;
-import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    
 }

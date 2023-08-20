@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
             PdfPTable table) {
         for (Product product : productList) {
             PdfPCell productNameCell = generateCell(product.getName(), 3, 5f);
-            PdfPCell urgencyCell = generateCell(String.valueOf(product.getId()), 1, 5f);
+            PdfPCell urgencyCell = generateCell(product.getUrgencyLevel().getMessage(), 1, 5f);
 
             table.addCell(productNameCell);
             table.addCell(urgencyCell);
