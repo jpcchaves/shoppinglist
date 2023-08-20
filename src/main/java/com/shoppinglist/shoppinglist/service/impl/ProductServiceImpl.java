@@ -43,8 +43,35 @@ public class ProductServiceImpl implements ProductService {
         return new PdfPTable(columns);
     }
 
+    private Phrase createPhrase(String phrase) {
+        return new Phrase(phrase);
+    }
+
+    private PdfPCell buildPdfCell(
+            Phrase phrase,
+            int colSize,
+            float fontSize,
+            int fontWeight,
+            int horizontalAlignment,
+            int verticalAlignment,
+            BaseColor bgColor,
+            float padding) {
+        PdfPCell header = new PdfPCell(phrase);
+        header.setColspan(colSize);
+        header.setHorizontalAlignment(horizontalAlignment);
+        header.setVerticalAlignment(verticalAlignment);
+        header.getPhrase().getFont().setSize(fontSize);
+        header.getPhrase().getFont().setStyle(fontWeight);
+        header.setBackgroundColor(bgColor);
+        header.setPadding(padding);
+        return header;
+    }
+
     @Override
     public byte[] getProductsListPdf() throws DocumentException {
+        final String PRODUCTS_HEADER_NAME = "Produtos";
+        final String URGENCY_HEADER_NAME = "Urgência";
+
         List<Product> productList = getProducts();
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
@@ -55,22 +82,12 @@ public class ProductServiceImpl implements ProductService {
 
         PdfPTable table = createNewPdfTable(4);
 
-        Phrase headerPhrase = new Phrase("Produtos");
-        PdfPCell header = new PdfPCell(headerPhrase);
-        header.setColspan(3);
-        header.setHorizontalAlignment(Element.ALIGN_CENTER);
-        header.setVerticalAlignment(Element.ALIGN_CENTER);
-        header.getPhrase().getFont().setSize(16);
-        header.getPhrase().getFont().setStyle(Font.BOLD);
-        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        header.setPadding(10f);
 
-        PdfPCell header2 = new PdfPCell();
-        header2.setColspan(1);
+        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
+        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
 
-        table.addCell(header);
-        table.addCell(header2);
-
+        table.addCell(productsHeader);
+        table.addCell(urgencyHeader);
 
         for (Product product : productList) {
             PdfPCell cell = new PdfPCell();
