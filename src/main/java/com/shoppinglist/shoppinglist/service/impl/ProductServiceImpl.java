@@ -6,11 +6,13 @@ import com.itextpdf.text.pdf.PdfPHeaderCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shoppinglist.shoppinglist.domain.entities.Product;
+import com.shoppinglist.shoppinglist.helpers.ProductComparator;
 import com.shoppinglist.shoppinglist.repository.ProductRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,6 +21,11 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    private List<Product> getSortedProducts(List<Product> productList) {
+        productList.sort(new ProductComparator());
+        return productList;
     }
 
     @Override
@@ -98,6 +105,7 @@ public class ProductServiceImpl implements ProductService {
         final String URGENCY_HEADER_NAME = "Urgência";
 
         List<Product> productList = getProducts();
+        List<Product> sortedProductList = getSortedProducts(productList);
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
@@ -114,7 +122,7 @@ public class ProductServiceImpl implements ProductService {
         table.addCell(productsHeader);
         table.addCell(urgencyHeader);
 
-        generateTableCells(productList, table);
+        generateTableCells(sortedProductList, table);
 
         document.add(table);
         document.close();
