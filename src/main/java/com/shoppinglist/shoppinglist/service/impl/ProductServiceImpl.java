@@ -87,6 +87,8 @@ public class ProductServiceImpl implements ProductService {
         pdfPCell.setColspan(cols);
         pdfPCell.setPadding(padding);
         pdfPCell.setPhrase(new Phrase(phrase));
+        pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+        pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return pdfPCell;
     }
 
@@ -107,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
 
 
         PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
-        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
+        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 1, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
 
         table.addCell(productsHeader);
         table.addCell(urgencyHeader);
