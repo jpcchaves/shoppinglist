@@ -67,6 +67,29 @@ public class ProductServiceImpl implements ProductService {
         return header;
     }
 
+    private void generateTableCells(
+            List<Product> productList,
+            PdfPTable table) {
+        for (Product product : productList) {
+            PdfPCell productNameCell = generateCell(product.getName(), 3, 5f);
+            PdfPCell urgencyCell = generateCell(String.valueOf(product.getId()), 1, 5f);
+
+            table.addCell(productNameCell);
+            table.addCell(urgencyCell);
+        }
+    }
+
+    private PdfPCell generateCell(
+            String phrase,
+            int cols,
+            float padding) {
+        PdfPCell pdfPCell = new PdfPCell();
+        pdfPCell.setColspan(cols);
+        pdfPCell.setPadding(padding);
+        pdfPCell.setPhrase(new Phrase(phrase));
+        return pdfPCell;
+    }
+
     @Override
     public byte[] getProductsListPdf() throws DocumentException {
         final String PRODUCTS_HEADER_NAME = "Produtos";
@@ -89,17 +112,7 @@ public class ProductServiceImpl implements ProductService {
         table.addCell(productsHeader);
         table.addCell(urgencyHeader);
 
-        for (Product product : productList) {
-            PdfPCell cell = new PdfPCell();
-            PdfPCell cellId = new PdfPCell();
-            cell.setColspan(3);
-            cell.setPadding(5f);
-            cell.setPhrase(new Phrase(product.getName()));
-            table.addCell(cell);
-            cellId.setColspan(1);
-            cellId.setPhrase(new Phrase(String.valueOf(product.getId())));
-            table.addCell(cellId);
-        }
+        generateTableCells(productList, table);
 
         document.add(table);
         document.close();
