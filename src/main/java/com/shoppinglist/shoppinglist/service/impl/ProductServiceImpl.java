@@ -39,6 +39,10 @@ public class ProductServiceImpl implements ProductService {
         return new ByteArrayOutputStream();
     }
 
+    private PdfPTable createNewPdfTable(int columns) {
+        return new PdfPTable(columns);
+    }
+
     @Override
     public byte[] getProductsListPdf() throws DocumentException {
         List<Product> productList = getProducts();
@@ -49,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
         PdfWriter.getInstance(document, outputStream);
         document.open();
 
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = createNewPdfTable(4);
 
         Phrase headerPhrase = new Phrase("Produtos");
         PdfPCell header = new PdfPCell(headerPhrase);
