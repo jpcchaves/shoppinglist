@@ -1,10 +1,8 @@
 package com.shoppinglist.shoppinglist.service.impl;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPHeaderCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shoppinglist.shoppinglist.domain.entities.Product;
@@ -44,11 +42,25 @@ public class ProductServiceImpl implements ProductService {
         document.open();
 
         PdfPTable table = new PdfPTable(1);
-        PdfPCell cell = new PdfPCell(new Paragraph("Header"));
-        table.addCell(cell);
+
+        Phrase headerPhrase = new Phrase("Produtos");
+
+        PdfPCell header = new PdfPCell(headerPhrase);
+        header.setHorizontalAlignment(Element.ALIGN_CENTER);
+        header.setVerticalAlignment(Element.ALIGN_CENTER);
+        header.getPhrase().getFont().setSize(16);
+        header.getPhrase().getFont().setStyle(Font.BOLD);
+        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        header.setPadding(10f);
+
+        table.addCell(header);
+
 
         for (Product product : productList) {
-            table.addCell(product.getName());
+            PdfPCell cell = new PdfPCell();
+            cell.setPadding(5f);
+            cell.setPhrase(new Phrase(product.getName()));
+            table.addCell(cell);
         }
 
         document.add(table);
