@@ -31,12 +31,20 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
+    private Document createNewDocument() {
+        return new Document(PageSize.A4);
+    }
+
+    private ByteArrayOutputStream createNewByteArrayOutputStream() {
+        return new ByteArrayOutputStream();
+    }
+
     @Override
     public byte[] getProductsListPdf() throws DocumentException {
         List<Product> productList = getProducts();
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Document document = new Document(PageSize.A4);
+        ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
+        Document document = createNewDocument();
 
         PdfWriter.getInstance(document, outputStream);
         document.open();
