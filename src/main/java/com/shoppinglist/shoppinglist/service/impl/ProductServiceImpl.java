@@ -28,11 +28,6 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
-    private List<Product> getSortedProducts(List<Product> productList) {
-        productList.sort(new ProductComparator());
-        return productList;
-    }
-
     @Override
     public List<Product> getProducts() {
         return productRepository.findAll();
@@ -41,6 +36,42 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    @Override
+    public byte[] getProductsListPdf() throws DocumentException {
+        final String PRODUCTS_HEADER_NAME = "Produtos";
+        final String URGENCY_HEADER_NAME = "Urgência";
+
+        List<Product> productList = getProducts();
+        List<Product> sortedProductList = getSortedProducts(productList);
+
+        ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
+        Document document = createNewDocument();
+
+        PdfWriter.getInstance(document, outputStream);
+        document.open();
+
+        PdfPTable table = createNewPdfTable(4);
+
+
+        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
+        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 1, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
+
+        table.addCell(productsHeader);
+        table.addCell(urgencyHeader);
+
+        generateTableCells(sortedProductList, table);
+
+        document.add(table);
+        document.close();
+
+        return outputStream.toByteArray();
+    }
+
+    private List<Product> getSortedProducts(List<Product> productList) {
+        productList.sort(new ProductComparator());
+        return productList;
     }
 
     private Document createNewDocument() {
@@ -102,37 +133,6 @@ public class ProductServiceImpl implements ProductService {
         pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
         pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return pdfPCell;
-    }
-
-    @Override
-    public byte[] getProductsListPdf() throws DocumentException {
-        final String PRODUCTS_HEADER_NAME = "Produtos";
-        final String URGENCY_HEADER_NAME = "Urgência";
-
-        List<Product> productList = getProducts();
-        List<Product> sortedProductList = getSortedProducts(productList);
-
-        ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
-        Document document = createNewDocument();
-
-        PdfWriter.getInstance(document, outputStream);
-        document.open();
-
-        PdfPTable table = createNewPdfTable(4);
-
-
-        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
-        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 1, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
-
-        table.addCell(productsHeader);
-        table.addCell(urgencyHeader);
-
-        generateTableCells(sortedProductList, table);
-
-        document.add(table);
-        document.close();
-
-        return outputStream.toByteArray();
     }
 
 }
