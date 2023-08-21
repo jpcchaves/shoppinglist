@@ -1,4 +1,4 @@
-package com.shoppinglist.shoppinglist.helpers;
+package com.shoppinglist.shoppinglist.utils.product;
 
 import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 import com.shoppinglist.shoppinglist.domain.entities.Product;

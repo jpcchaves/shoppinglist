@@ -16,7 +16,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shoppinglist.shoppinglist.domain.entities.Product;
-import com.shoppinglist.shoppinglist.helpers.ProductComparator;
+import com.shoppinglist.shoppinglist.utils.product.ProductComparator;
 import com.shoppinglist.shoppinglist.repository.ProductRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 
