@@ -43,8 +43,7 @@ public class ProductServiceImpl implements ProductService {
         final String PRODUCTS_HEADER_NAME = "Produtos";
         final String URGENCY_HEADER_NAME = "Urgência";
 
-        List<Product> productList = getProducts();
-        List<Product> sortedProductList = getSortedProducts(productList);
+        List<Product> sortedProductList = getSortedProducts(getProducts());
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
