@@ -113,8 +113,8 @@ public class ProductServiceImpl implements ProductService {
             List<Product> productList,
             PdfPTable table) {
         for (Product product : productList) {
-            PdfPCell productNameCell = generateCell(product.getName(), 3, 5f);
-            PdfPCell urgencyCell = generateCell(product.getUrgencyLevel().getMessage(), 1, 5f);
+            PdfPCell productNameCell = generateCell(product, product.getName(), 3, 5f);
+            PdfPCell urgencyCell = generateCell(product, product.getUrgencyLevel().getMessage(), 1, 5f);
 
             table.addCell(productNameCell);
             table.addCell(urgencyCell);
@@ -122,6 +122,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private PdfPCell generateCell(
+            Product product,
             String phrase,
             int cols,
             float padding) {
@@ -131,7 +132,32 @@ public class ProductServiceImpl implements ProductService {
         pdfPCell.setPhrase(new Phrase(phrase));
         pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
         pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        pdfPCell.setBackgroundColor(defineCellColor(product));
         return pdfPCell;
     }
+
+    private BaseColor defineCellColor(Product product) {
+        final int alphaLevel = 150;
+      switch (product.getUrgencyLevel()) {
+          case CRITICAL -> {
+              return new BaseColor(217, 83, 79, alphaLevel);
+          }
+          case HIGH -> {
+              return new BaseColor(240, 173, 78, alphaLevel);
+          }
+          case MEDIUM -> {
+              return new BaseColor(92, 184, 92, alphaLevel);
+          }
+          case LOW -> {
+              return new BaseColor(2, 117, 216, alphaLevel);
+          }
+          case LOWEST -> {
+              return new BaseColor(91, 192, 222, alphaLevel);
+          }
+          default -> {
+              return BaseColor.WHITE;
+          }
+      }
+    };
 
 }
