@@ -68,6 +68,19 @@ public class ProductServiceImpl implements ProductService {
         return outputStream.toByteArray();
     }
 
+    @Override
+    public void removeProduct(Long id) {
+        verifyIfProductExists(id);
+        productRepository.deleteById(id);
+    }
+
+
+    private void verifyIfProductExists(Long productId) {
+        productRepository
+                .findById(productId)
+                .orElseThrow(() -> new RuntimeException(""));
+    }
+
     private List<Product> getSortedProducts(List<Product> productList) {
         productList.sort(new ProductComparator());
         return productList;
