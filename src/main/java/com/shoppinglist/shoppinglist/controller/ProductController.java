@@ -29,6 +29,11 @@ public class ProductController {
     public ResponseEntity<Product> createProducts(@RequestBody Product product) {
         return ResponseEntity.ok(productService.createProduct(product));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long id) {
+        productService.removeProduct(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @GetMapping("/pdf")
     public ResponseEntity<byte[]> getProductsListPdf() throws DocumentException {
@@ -36,4 +41,5 @@ public class ProductController {
         httpHeaders.setContentType(MediaType.APPLICATION_PDF);
         return new ResponseEntity<>(productService.getProductsListPdf(), httpHeaders, HttpStatus.OK);
     }
+
 }
