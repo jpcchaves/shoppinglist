@@ -9,4 +9,5 @@ public interface ProductService {
     Product createProduct(Product product);
     List<Product> getProducts();
     byte[] getProductsListPdf() throws DocumentException;
+    void removeProduct(Long id);
 }
