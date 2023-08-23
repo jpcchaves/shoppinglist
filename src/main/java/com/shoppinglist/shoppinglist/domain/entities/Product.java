@@ -19,6 +19,10 @@ public class Product {
     @Column(length = 10, nullable = false)
     private UrgencyLevel urgencyLevel;
 
+    @ManyToOne
+    @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
+    private ShoppingCart shoppingCart;
+
     @CreationTimestamp
     private Date createdAt;
 
@@ -29,10 +33,11 @@ public class Product {
             Long id,
             String name,
             UrgencyLevel urgencyLevel,
-            Date createdAt) {
+            ShoppingCart shoppingCart, Date createdAt) {
         this.id = id;
         this.name = name;
         this.urgencyLevel = urgencyLevel;
+        this.shoppingCart = shoppingCart;
         this.createdAt = createdAt;
     }
 
@@ -58,6 +63,14 @@ public class Product {
 
     public void setUrgencyLevel(UrgencyLevel urgencyLevel) {
         this.urgencyLevel = urgencyLevel;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 
     public Date getCreatedAt() {
