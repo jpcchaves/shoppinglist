@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "shopping_carts")
@@ -17,6 +18,9 @@ public class ShoppingCart {
 
     @Column(length = 100, nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
+    private UUID uuid = UUID.randomUUID();
 
     @OneToMany(
             fetch = FetchType.EAGER,
@@ -35,10 +39,12 @@ public class ShoppingCart {
     public ShoppingCart(
             Long id,
             String name,
+            UUID uuid,
             List<Product> products,
             Date createdAt) {
         this.id = id;
         this.name = name;
+        this.uuid = uuid;
         this.products = products;
         this.createdAt = createdAt;
     }
@@ -53,6 +59,7 @@ public class ShoppingCart {
 
     public List<Product> getProducts() {
         return products;
+
     }
 
     public void setProducts(List<Product> products) {
@@ -73,5 +80,13 @@ public class ShoppingCart {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
