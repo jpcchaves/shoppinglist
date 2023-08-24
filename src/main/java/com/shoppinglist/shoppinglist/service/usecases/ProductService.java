@@ -12,7 +12,7 @@ public interface ProductService {
 
     List<Product> getProducts(Long shoppingCartId);
 
-    byte[] getProductsListPdf() throws DocumentException;
+    byte[] getProductsListPdf(Long shoppingCartId) throws DocumentException;
 
     void removeProduct(Long id);
 }

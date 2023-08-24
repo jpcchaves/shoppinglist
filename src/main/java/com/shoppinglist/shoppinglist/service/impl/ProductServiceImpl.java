@@ -57,11 +57,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public byte[] getProductsListPdf() throws DocumentException {
+    public byte[] getProductsListPdf(Long shoppingCartId) throws DocumentException {
         final String PRODUCTS_HEADER_NAME = "Produtos";
         final String URGENCY_HEADER_NAME = "Urgência";
 
-        List<Product> sortedProductList = getSortedProducts(getProducts(1L));
+        List<Product> sortedProductList = getSortedProducts(getProducts(shoppingCartId));
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
