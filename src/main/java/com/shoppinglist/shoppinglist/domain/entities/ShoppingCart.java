@@ -20,7 +20,7 @@ public class ShoppingCart {
 
     @OneToMany(
             fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.DETACH
     )
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
     @JsonManagedReference
