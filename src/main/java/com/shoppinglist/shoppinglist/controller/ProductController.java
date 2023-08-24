@@ -2,6 +2,8 @@ package com.shoppinglist.shoppinglist.controller;
 
 import com.itextpdf.text.DocumentException;
 import com.shoppinglist.shoppinglist.domain.entities.Product;
+import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
+import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,13 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts() {
         return ResponseEntity.ok(productService.getProducts());
     }
-
+    
     @PostMapping
-    public ResponseEntity<Product> createProducts(@RequestBody Product product) {
-        return ResponseEntity.ok(productService.createProduct(product));
+    public ResponseEntity<ApiMessageResponse> createProducts(@RequestBody ProductCreateDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(createDto));
     }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long id) {
         productService.removeProduct(id);
