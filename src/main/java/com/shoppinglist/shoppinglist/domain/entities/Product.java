@@ -1,5 +1,6 @@
 package com.shoppinglist.shoppinglist.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
+    @JsonBackReference
     private ShoppingCart shoppingCart;
 
     @CreationTimestamp

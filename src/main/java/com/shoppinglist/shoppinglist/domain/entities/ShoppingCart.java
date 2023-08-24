@@ -1,5 +1,6 @@
 package com.shoppinglist.shoppinglist.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -22,6 +23,7 @@ public class ShoppingCart {
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 
     @CreationTimestamp
@@ -30,8 +32,11 @@ public class ShoppingCart {
     public ShoppingCart() {
     }
 
-    public ShoppingCart(Long id,
-                        String name, List<Product> products, Date createdAt) {
+    public ShoppingCart(
+            Long id,
+            String name,
+            List<Product> products,
+            Date createdAt) {
         this.id = id;
         this.name = name;
         this.products = products;
