@@ -33,10 +33,12 @@ public class ProductController {
     }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Long id) {
-        productService.removeProduct(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{shoppingCartId}/{id}")
+    public ResponseEntity<?> deleteProduct(
+            @PathVariable(name = "shoppingCartId") Long shoppingCartId,
+            @PathVariable(name = "id") Long id) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(productService.removeProduct(shoppingCartId, id));
     }
 
     @GetMapping("/{shoppingCartId}/export-to-pdf")
