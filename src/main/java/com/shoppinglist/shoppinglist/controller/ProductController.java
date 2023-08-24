@@ -22,11 +22,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        return ResponseEntity.ok(productService.getProducts());
+    @GetMapping("/{shoppingCartId}")
+    public ResponseEntity<List<Product>> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
+        return ResponseEntity.ok(productService.getProducts(shoppingCartId));
     }
-    
+
     @PostMapping
     public ResponseEntity<ApiMessageResponse> createProducts(@RequestBody ProductCreateDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(createDto));
