@@ -39,11 +39,11 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/pdf")
-    public ResponseEntity<byte[]> getProductsListPdf() throws DocumentException {
+    @GetMapping("/{shoppingCartId}/export-to-pdf")
+    public ResponseEntity<byte[]> getProductsListPdf(@PathVariable(name = "shoppingCartId") Long shoppingCartId) throws DocumentException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_PDF);
-        return new ResponseEntity<>(productService.getProductsListPdf(), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductsListPdf(shoppingCartId), httpHeaders, HttpStatus.OK);
     }
 
 }
