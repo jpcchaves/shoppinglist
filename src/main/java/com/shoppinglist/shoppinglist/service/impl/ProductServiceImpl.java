@@ -3,6 +3,10 @@ package com.shoppinglist.shoppinglist.service.impl;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
+import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
+import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
+import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.BaseColor;
@@ -23,19 +27,30 @@ import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(
+            ProductRepository productRepository,
+            ShoppingCartRepository shoppingCartRepository) {
         this.productRepository = productRepository;
+        this.shoppingCartRepository = shoppingCartRepository;
     }
 
     @Override
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
-
+    
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
+        ShoppingCart shoppingCart = shoppingCartRepository
+                .findById(createProduct.getShoppingCartId())
+                .orElseThrow(() -> new RuntimeException("O carrinho informado não existe"));
+
+        Product product = new Product(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
+        Product savedProduct = productRepository.save(product);
+
+        return new ApiMessageResponse("Produto adicionado com sucesso: " + savedProduct.getName() + ", ID: " + savedProduct.getId());
     }
 
     @Override
@@ -151,26 +166,28 @@ public class ProductServiceImpl implements ProductService {
 
     private BaseColor defineCellColor(Product product) {
         final int alphaLevel = 150;
-      switch (product.getUrgencyLevel()) {
-          case CRITICAL -> {
-              return new BaseColor(217, 83, 79, alphaLevel);
-          }
-          case HIGH -> {
-              return new BaseColor(240, 173, 78, alphaLevel);
-          }
-          case MEDIUM -> {
-              return new BaseColor(92, 184, 92, alphaLevel);
-          }
-          case LOW -> {
-              return new BaseColor(2, 117, 216, alphaLevel);
-          }
-          case LOWEST -> {
-              return new BaseColor(91, 192, 222, alphaLevel);
-          }
-          default -> {
-              return BaseColor.WHITE;
-          }
-      }
-    };
+        switch (product.getUrgencyLevel()) {
+            case CRITICAL -> {
+                return new BaseColor(217, 83, 79, alphaLevel);
+            }
+            case HIGH -> {
+                return new BaseColor(240, 173, 78, alphaLevel);
+            }
+            case MEDIUM -> {
+                return new BaseColor(92, 184, 92, alphaLevel);
+            }
+            case LOW -> {
+                return new BaseColor(2, 117, 216, alphaLevel);
+            }
+            case LOWEST -> {
+                return new BaseColor(91, 192, 222, alphaLevel);
+            }
+            default -> {
+                return BaseColor.WHITE;
+            }
+        }
+    }
+
+    ;
 
 }
