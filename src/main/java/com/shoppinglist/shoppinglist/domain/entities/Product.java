@@ -30,10 +30,20 @@ public class Product {
     }
 
     public Product(
+            String name,
+            UrgencyLevel urgencyLevel,
+            ShoppingCart shoppingCart) {
+        this.name = name;
+        this.urgencyLevel = urgencyLevel;
+        this.shoppingCart = shoppingCart;
+    }
+
+    public Product(
             Long id,
             String name,
             UrgencyLevel urgencyLevel,
-            ShoppingCart shoppingCart, Date createdAt) {
+            ShoppingCart shoppingCart,
+            Date createdAt) {
         this.id = id;
         this.name = name;
         this.urgencyLevel = urgencyLevel;
