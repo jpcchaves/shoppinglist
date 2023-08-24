@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProductService {
     ApiMessageResponse createProduct(ProductCreateDto createProduct);
 
-    List<Product> getProducts();
+    List<Product> getProducts(Long shoppingCartId);
 
     byte[] getProductsListPdf() throws DocumentException;
 

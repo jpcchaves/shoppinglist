@@ -37,10 +37,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public List<Product> getProducts(Long shoppingCartId) {
+        if (!shoppingCartRepository.existsById(shoppingCartId)) {
+            throw new RuntimeException("O carrinho informado não existe");
+        }
+        return productRepository.findAllByShoppingCart_Id(shoppingCartId);
     }
-    
+
     @Override
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
         ShoppingCart shoppingCart = shoppingCartRepository
@@ -58,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
         final String PRODUCTS_HEADER_NAME = "Produtos";
         final String URGENCY_HEADER_NAME = "Urgência";
 
-        List<Product> sortedProductList = getSortedProducts(getProducts());
+        List<Product> sortedProductList = getSortedProducts(getProducts(1L));
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
