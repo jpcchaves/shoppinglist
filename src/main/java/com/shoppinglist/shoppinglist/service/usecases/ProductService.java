@@ -14,5 +14,7 @@ public interface ProductService {
 
     byte[] getProductsListPdf(Long shoppingCartId) throws DocumentException;
 
-    void removeProduct(Long id);
+    ApiMessageResponse removeProduct(
+            Long shoppingCartId,
+            Long id);
 }

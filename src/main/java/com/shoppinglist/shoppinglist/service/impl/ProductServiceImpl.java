@@ -87,16 +87,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void removeProduct(Long id) {
-        verifyIfProductExists(id);
+    public ApiMessageResponse removeProduct(
+            Long shoppingCartId,
+            Long id) {
+        verifyIfProductExists(shoppingCartId, id);
+
         productRepository.deleteById(id);
+
+        return new ApiMessageResponse("Produto removido com sucesso!");
     }
 
 
-    private void verifyIfProductExists(Long productId) {
+    private void verifyIfProductExists(
+            Long shoppingCartId,
+            Long productId) {
         productRepository
-                .findById(productId)
-                .orElseThrow(() -> new RuntimeException(""));
+                .findByIdAndShoppingCart_id(productId, shoppingCartId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
     }
 
     private List<Product> getSortedProducts(List<Product> productList) {
