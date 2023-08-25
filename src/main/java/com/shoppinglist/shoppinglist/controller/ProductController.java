@@ -4,6 +4,7 @@ import com.itextpdf.text.DocumentException;
 import com.shoppinglist.shoppinglist.domain.entities.Product;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
+import com.shoppinglist.shoppinglist.payload.product.ProductMinDto;
 import com.shoppinglist.shoppinglist.payload.product.ProductUpdateDto;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,13 @@ public class ProductController {
     @GetMapping("/{shoppingCartId}")
     public ResponseEntity<List<Product>> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
         return ResponseEntity.ok(productService.getProducts(shoppingCartId));
+    }
+
+    @GetMapping("/{shoppingCartId}/{id}")
+    public ResponseEntity<ProductMinDto> getProducts(
+            @PathVariable(name = "shoppingCartId") Long shoppingCartId,
+            @PathVariable(name = "id") Long id) {
+        return ResponseEntity.ok(productService.getProductById(shoppingCartId, id));
     }
 
     @PostMapping
