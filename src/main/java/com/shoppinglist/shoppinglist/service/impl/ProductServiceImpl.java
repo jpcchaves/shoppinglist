@@ -6,6 +6,7 @@ import java.util.List;
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
+import com.shoppinglist.shoppinglist.payload.product.ProductMinDto;
 import com.shoppinglist.shoppinglist.payload.product.ProductUpdateDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,17 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.save(product);
         return new ApiMessageResponse("Produto atualizado com sucesso");
+    }
+
+    @Override
+    public ProductMinDto getProductById(
+            Long shoppingCartId,
+            Long id) {
+        Product product = productRepository
+                .findByIdAndShoppingCart_id(id, shoppingCartId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+        return new ProductMinDto(product.getId(), product.getName(), product.getUrgencyLevel());
     }
 
     @Override
