@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
+import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
 import com.shoppinglist.shoppinglist.payload.product.ProductMinDto;
@@ -41,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProducts(Long shoppingCartId) {
         if (!shoppingCartRepository.existsById(shoppingCartId)) {
-            throw new RuntimeException("O carrinho informado não existe");
+            throw new ResourceNotFoundException("O carrinho informado não existe");
         }
         return productRepository.findAllByShoppingCart_Id(shoppingCartId);
     }
@@ -50,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
         ShoppingCart shoppingCart = shoppingCartRepository
                 .findById(createProduct.getShoppingCartId())
-                .orElseThrow(() -> new RuntimeException("O carrinho informado não existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("O carrinho informado não existe"));
 
         Product product = new Product(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
         Product savedProduct = productRepository.save(product);
@@ -65,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
             ProductUpdateDto updateProduct) {
         Product product = productRepository
                 .findByIdAndShoppingCart_id(id, shoppingCartId)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
         product.setName(updateProduct.getName());
         product.setUrgencyLevel(updateProduct.getUrgencyLevel());
@@ -80,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
             Long id) {
         Product product = productRepository
                 .findByIdAndShoppingCart_id(id, shoppingCartId)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
         return new ProductMinDto(product.getId(), product.getName(), product.getUrgencyLevel());
     }
@@ -132,7 +133,7 @@ public class ProductServiceImpl implements ProductService {
             Long productId) {
         productRepository
                 .findByIdAndShoppingCart_id(productId, shoppingCartId)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
 
     private List<Product> getSortedProducts(List<Product> productList) {
