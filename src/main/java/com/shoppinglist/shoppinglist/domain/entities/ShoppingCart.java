@@ -39,6 +39,15 @@ public class ShoppingCart {
     public ShoppingCart(
             Long id,
             String name,
+            UUID uuid) {
+        this.id = id;
+        this.name = name;
+        this.uuid = uuid;
+    }
+
+    public ShoppingCart(
+            Long id,
+            String name,
             UUID uuid,
             List<Product> products,
             Date createdAt) {
