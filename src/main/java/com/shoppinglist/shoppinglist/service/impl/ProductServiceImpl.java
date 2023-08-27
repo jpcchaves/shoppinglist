@@ -44,9 +44,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(Long shoppingCartId) {
+    public List<ProductMinDto> getProducts(Long shoppingCartId) {
         verifyIfShoppingCartExists(shoppingCartId);
-        return getProductsByShoppingCart(shoppingCartId);
+        return mapperUtils.parseListObjects(getProductsByShoppingCart(shoppingCartId), ProductMinDto.class);
     }
 
     @Override
@@ -81,11 +81,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductMinDto getProductById(
             Long shoppingCartId,
             Long id) {
-        Product product = productRepository
-                .findByIdAndShoppingCart_id(id, shoppingCartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+        Product product = getShoppingCartProductById(id, shoppingCartId);
 
-        return new ProductMinDto(product.getId(), product.getName(), product.getUrgencyLevel());
+        return mapperUtils.parseObject(product, ProductMinDto.class);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         final String PRODUCTS_HEADER_NAME = "Produtos";
         final String URGENCY_HEADER_NAME = "Urgência";
 
-        List<Product> sortedProductList = getSortedProducts(getProducts(shoppingCartId));
+        List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(getProducts(shoppingCartId), Product.class));
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
@@ -137,6 +135,14 @@ public class ProductServiceImpl implements ProductService {
         if (!shoppingCartRepository.existsById(shoppingCartId)) {
             throw new ResourceNotFoundException("O carrinho informado não existe");
         }
+    }
+
+    private Product getShoppingCartProductById(
+            Long productId,
+            Long shoppingCartId) {
+        return productRepository
+                .findByIdAndShoppingCart_id(productId, shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
 
     private void verifyIfProductExists(
