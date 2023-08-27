@@ -39,11 +39,10 @@ public class ProductServiceImpl implements ProductService {
         this.shoppingCartRepository = shoppingCartRepository;
     }
 
+
     @Override
     public List<Product> getProducts(Long shoppingCartId) {
-        if (!shoppingCartRepository.existsById(shoppingCartId)) {
-            throw new ResourceNotFoundException("O carrinho informado não existe");
-        }
+        verifyIfShoppingCartExists(shoppingCartId);
         return productRepository.findAllByShoppingCart_Id(shoppingCartId);
     }
 
@@ -127,6 +126,11 @@ public class ProductServiceImpl implements ProductService {
         return new ApiMessageResponse("Produto removido com sucesso!");
     }
 
+    private void verifyIfShoppingCartExists(Long shoppingCartId) {
+        if (!shoppingCartRepository.existsById(shoppingCartId)) {
+            throw new ResourceNotFoundException("O carrinho informado não existe");
+        }
+    }
 
     private void verifyIfProductExists(
             Long shoppingCartId,
