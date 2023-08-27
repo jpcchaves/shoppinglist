@@ -10,6 +10,7 @@ import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
 import com.shoppinglist.shoppinglist.payload.product.ProductMinDto;
 import com.shoppinglist.shoppinglist.payload.product.ProductUpdateDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
+import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.BaseColor;
@@ -31,19 +32,21 @@ import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final MapperUtils mapperUtils;
 
     public ProductServiceImpl(
             ProductRepository productRepository,
-            ShoppingCartRepository shoppingCartRepository) {
+            ShoppingCartRepository shoppingCartRepository,
+            MapperUtils mapperUtils) {
         this.productRepository = productRepository;
         this.shoppingCartRepository = shoppingCartRepository;
+        this.mapperUtils = mapperUtils;
     }
-
 
     @Override
     public List<Product> getProducts(Long shoppingCartId) {
         verifyIfShoppingCartExists(shoppingCartId);
-        return productRepository.findAllByShoppingCart_Id(shoppingCartId);
+        return getProductsByShoppingCart(shoppingCartId);
     }
 
     @Override
@@ -124,6 +127,10 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
 
         return new ApiMessageResponse("Produto removido com sucesso!");
+    }
+
+    private List<Product> getProductsByShoppingCart(Long shoppingCartId) {
+        return productRepository.findAllByShoppingCart_Id(shoppingCartId);
     }
 
     private void verifyIfShoppingCartExists(Long shoppingCartId) {
