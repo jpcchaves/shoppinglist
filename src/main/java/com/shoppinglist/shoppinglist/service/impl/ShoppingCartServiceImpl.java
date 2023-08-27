@@ -1,6 +1,7 @@
 package com.shoppinglist.shoppinglist.service.impl;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
+import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartMinDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
@@ -13,9 +14,13 @@ import java.util.List;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
+    private final ShoppingCartFactory shoppingCartFactory;
 
-    public ShoppingCartServiceImpl(ShoppingCartRepository shoppingCartRepository) {
+    public ShoppingCartServiceImpl(
+            ShoppingCartRepository shoppingCartRepository,
+            ShoppingCartFactory shoppingCartFactory) {
         this.shoppingCartRepository = shoppingCartRepository;
+        this.shoppingCartFactory = shoppingCartFactory;
     }
 
     @Override
@@ -25,13 +30,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
         for (ShoppingCart shoppingCart : shoppingCarts) {
-            shoppingCartMinDtos.add(
-                    new ShoppingCartMinDto(
-                            shoppingCart.getId(),
-                            shoppingCart.getUuid(),
-                            shoppingCart.getName()
-                    )
-            );
+            shoppingCartMinDtos.add(buildNewShoppingCart(shoppingCart));
         }
 
         return shoppingCartMinDtos;
@@ -41,5 +40,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ApiMessageResponse create(ShoppingCart request) {
         ShoppingCart createdShoppingCart = shoppingCartRepository.save(request);
         return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
+    }
+    
+    private ShoppingCartMinDto buildNewShoppingCart(ShoppingCart shoppingCart) {
+        return shoppingCartFactory
+                .createShoppingCart(
+                        shoppingCart.getId(), shoppingCart.getUuid(), shoppingCart.getName()
+                );
     }
 }
