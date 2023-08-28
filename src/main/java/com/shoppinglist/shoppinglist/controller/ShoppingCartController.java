@@ -2,6 +2,7 @@ package com.shoppinglist.shoppinglist.controller;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
+import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartListDto;
 import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartMinDto;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
 import org.apache.coyote.Response;
@@ -22,7 +23,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ShoppingCartMinDto>> getAll() {
+    public ResponseEntity<List<ShoppingCartListDto>> getAll() {
         return ResponseEntity.ok(shoppingCartService.getAll());
     }
 
