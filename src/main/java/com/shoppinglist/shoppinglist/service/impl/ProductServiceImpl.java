@@ -70,8 +70,7 @@ public class ProductServiceImpl implements ProductService {
                 .findByIdAndShoppingCart_id(id, shoppingCartId)
                 .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
 
-        product.setName(updateProduct.getName());
-        product.setUrgencyLevel(updateProduct.getUrgencyLevel());
+        updateProductAttributes(product, updateProduct);
 
         productRepository.save(product);
         return new ApiMessageResponse("Produto atualizado com sucesso");
@@ -125,6 +124,13 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
 
         return new ApiMessageResponse("Produto removido com sucesso!");
+    }
+
+    private void updateProductAttributes(
+            Product product,
+            ProductUpdateDto productUpdateDto) {
+        product.setName(productUpdateDto.getName());
+        product.setUrgencyLevel(productUpdateDto.getUrgencyLevel());
     }
 
     private List<Product> getProductsByShoppingCart(Long shoppingCartId) {
