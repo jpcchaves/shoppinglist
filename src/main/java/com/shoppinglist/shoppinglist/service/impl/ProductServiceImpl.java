@@ -51,9 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
-        ShoppingCart shoppingCart = shoppingCartRepository
-                .findById(createProduct.getShoppingCartId())
-                .orElseThrow(() -> new ResourceNotFoundException("O carrinho informado não existe"));
+        ShoppingCart shoppingCart = fetchShoppingCartById(createProduct.getShoppingCartId());
 
         Product product = new Product(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
         Product savedProduct = productRepository.save(product);
@@ -66,14 +64,27 @@ public class ProductServiceImpl implements ProductService {
             Long shoppingCartId,
             Long id,
             ProductUpdateDto updateProduct) {
-        Product product = productRepository
-                .findByIdAndShoppingCart_id(id, shoppingCartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+        Product product = fetchProductById(id, shoppingCartId);
 
         updateProductAttributes(product, updateProduct);
 
         productRepository.save(product);
         return new ApiMessageResponse("Produto atualizado com sucesso");
+    }
+
+    private Product fetchProductById(
+            Long productId,
+            Long shoppingCartId) {
+        return productRepository
+                .findByIdAndShoppingCart_id(productId, shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+    }
+
+    private ShoppingCart fetchShoppingCartById(
+            Long shoppingCartId) {
+        return shoppingCartRepository
+                .findById(shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado"));
     }
 
     @Override
