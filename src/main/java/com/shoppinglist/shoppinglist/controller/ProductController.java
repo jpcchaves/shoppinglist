@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/{shoppingCartId}")
-    public ResponseEntity<List<Product>> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
+    public ResponseEntity<List<ProductMinDto>> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
         return ResponseEntity.ok(productService.getProducts(shoppingCartId));
     }
 
