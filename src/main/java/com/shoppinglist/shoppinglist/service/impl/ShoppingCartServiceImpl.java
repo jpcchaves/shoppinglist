@@ -3,6 +3,7 @@ package com.shoppinglist.shoppinglist.service.impl;
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
+import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartListDto;
 import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartMinDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
@@ -24,16 +25,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public List<ShoppingCartMinDto> getAll() {
+    public List<ShoppingCartListDto> getAll() {
         List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
-        List<ShoppingCartMinDto> shoppingCartMinDtos = new ArrayList<>();
-
+        List<ShoppingCartListDto> shoppingCartListDtos = new ArrayList<>();
 
         for (ShoppingCart shoppingCart : shoppingCarts) {
-            shoppingCartMinDtos.add(buildNewShoppingCart(shoppingCart));
+            shoppingCartListDtos.add(buildNewShoppingCart(shoppingCart));
         }
 
-        return shoppingCartMinDtos;
+        return shoppingCartListDtos;
     }
 
     @Override
@@ -41,11 +41,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart createdShoppingCart = shoppingCartRepository.save(request);
         return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
     }
-    
-    private ShoppingCartMinDto buildNewShoppingCart(ShoppingCart shoppingCart) {
+
+    private ShoppingCartListDto buildNewShoppingCart(ShoppingCart shoppingCart) {
         return shoppingCartFactory
                 .createShoppingCart(
-                        shoppingCart.getId(), shoppingCart.getUuid(), shoppingCart.getName()
+                        shoppingCart.getId(),
+                        shoppingCart.getUuid(),
+                        shoppingCart.getName(),
+                        shoppingCart.getProducts().size(),
+                        shoppingCart.getCreatedAt()
                 );
     }
 }
