@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
+import com.shoppinglist.shoppinglist.factory.product.ProductFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
 import com.shoppinglist.shoppinglist.payload.product.ProductMinDto;
@@ -32,14 +33,17 @@ import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final ProductFactory productFactory;
     private final MapperUtils mapperUtils;
 
     public ProductServiceImpl(
             ProductRepository productRepository,
             ShoppingCartRepository shoppingCartRepository,
+            ProductFactory productFactory,
             MapperUtils mapperUtils) {
         this.productRepository = productRepository;
         this.shoppingCartRepository = shoppingCartRepository;
+        this.productFactory = productFactory;
         this.mapperUtils = mapperUtils;
     }
 
@@ -53,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
         ShoppingCart shoppingCart = fetchShoppingCartById(createProduct.getShoppingCartId());
 
-        Product product = new Product(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
+        Product product = productFactory.createProduct(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
         Product savedProduct = productRepository.save(product);
 
         return new ApiMessageResponse("Produto adicionado com sucesso: " + savedProduct.getName() + ", ID: " + savedProduct.getId());
