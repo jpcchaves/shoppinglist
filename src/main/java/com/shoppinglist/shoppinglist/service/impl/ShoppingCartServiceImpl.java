@@ -27,6 +27,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public List<ShoppingCartListDto> getAll() {
         List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
+
+        return buildShoppingCartList(shoppingCarts);
+    }
+
+
+    @Override
+    public ApiMessageResponse create(ShoppingCart request) {
+        ShoppingCart createdShoppingCart = shoppingCartRepository.save(request);
+        return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
+    }
+
+    private List<ShoppingCartListDto> buildShoppingCartList(List<ShoppingCart> shoppingCarts) {
         List<ShoppingCartListDto> shoppingCartListDtos = new ArrayList<>();
 
         for (ShoppingCart shoppingCart : shoppingCarts) {
@@ -35,13 +47,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         return shoppingCartListDtos;
     }
-
-    @Override
-    public ApiMessageResponse create(ShoppingCart request) {
-        ShoppingCart createdShoppingCart = shoppingCartRepository.save(request);
-        return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
-    }
-
+    
     private ShoppingCartListDto buildNewShoppingCart(ShoppingCart shoppingCart) {
         return shoppingCartFactory
                 .createShoppingCart(
