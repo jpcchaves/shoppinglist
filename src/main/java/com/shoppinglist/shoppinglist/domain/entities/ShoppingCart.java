@@ -19,13 +19,12 @@ public class ShoppingCart {
     @Column(length = 100, nullable = false)
     private String name;
 
+    private String description;
+
     @Column(nullable = false, unique = true)
     private UUID uuid = UUID.randomUUID();
 
-    @OneToMany(
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.DETACH
-    )
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
     @JsonManagedReference
     private List<Product> products = new ArrayList<>();
@@ -42,6 +41,17 @@ public class ShoppingCart {
             UUID uuid) {
         this.id = id;
         this.name = name;
+        this.uuid = uuid;
+    }
+
+    public ShoppingCart(
+            Long id,
+            String name,
+            String description,
+            UUID uuid) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
         this.uuid = uuid;
     }
 
