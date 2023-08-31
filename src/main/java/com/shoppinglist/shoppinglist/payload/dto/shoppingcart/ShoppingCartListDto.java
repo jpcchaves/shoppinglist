@@ -7,6 +7,7 @@ public class ShoppingCartListDto {
     private Long id;
     private UUID uuid;
     private String name;
+    private String description;
     private int productsAmount;
     private Date createdAt;
 
@@ -17,11 +18,13 @@ public class ShoppingCartListDto {
             Long id,
             UUID uuid,
             String name,
+            String description,
             int productsAmount,
             Date createdAt) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
+        this.description = description;
         this.productsAmount = productsAmount;
         this.createdAt = createdAt;
     }
@@ -64,5 +67,13 @@ public class ShoppingCartListDto {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
