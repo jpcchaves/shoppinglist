@@ -3,9 +3,11 @@ package com.shoppinglist.shoppinglist.service.impl;
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartCreateDto;
 import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
+import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,12 +17,15 @@ import java.util.List;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartFactory shoppingCartFactory;
+    private final MapperUtils mapperUtils;
 
     public ShoppingCartServiceImpl(
             ShoppingCartRepository shoppingCartRepository,
-            ShoppingCartFactory shoppingCartFactory) {
+            ShoppingCartFactory shoppingCartFactory,
+            MapperUtils mapperUtils) {
         this.shoppingCartRepository = shoppingCartRepository;
         this.shoppingCartFactory = shoppingCartFactory;
+        this.mapperUtils = mapperUtils;
     }
 
     @Override
@@ -32,8 +37,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
     @Override
-    public ApiMessageResponse create(ShoppingCart request) {
-        ShoppingCart createdShoppingCart = shoppingCartRepository.save(request);
+    public ApiMessageResponse create(ShoppingCartCreateDto request) {
+        ShoppingCart createdShoppingCart = shoppingCartRepository.save(mapperUtils.parseObject(request, ShoppingCart.class));
         return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
     }
 
@@ -53,6 +58,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         shoppingCart.getId(),
                         shoppingCart.getUuid(),
                         shoppingCart.getName(),
+                        shoppingCart.getDescription(),
                         shoppingCart.getProducts().size(),
                         shoppingCart.getCreatedAt()
                 );
