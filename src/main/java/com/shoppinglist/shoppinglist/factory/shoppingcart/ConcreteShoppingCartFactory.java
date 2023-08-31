@@ -13,9 +13,10 @@ public class ConcreteShoppingCartFactory implements ShoppingCartFactory {
             Long id,
             UUID uuid,
             String name,
+            String description,
             int productsAmount,
             Date createdAt) {
-        return new ShoppingCartListDto(id, uuid, name, productsAmount
+        return new ShoppingCartListDto(id, uuid, name, description, productsAmount
                 , createdAt);
     }
 }

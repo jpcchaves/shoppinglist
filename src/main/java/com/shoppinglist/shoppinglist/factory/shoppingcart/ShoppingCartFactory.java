@@ -10,6 +10,7 @@ public interface ShoppingCartFactory {
             Long id,
             UUID uuid,
             String name,
+            String description,
             int productsAmount,
             Date createdAt);
 }
