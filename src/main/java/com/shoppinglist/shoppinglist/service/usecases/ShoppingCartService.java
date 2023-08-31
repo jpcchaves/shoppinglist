@@ -2,7 +2,7 @@ package com.shoppinglist.shoppinglist.service.usecases;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartListDto;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package com.shoppinglist.shoppinglist.factory.shoppingcart;
 
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartListDto;
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartMinDto;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
 
 import java.util.Date;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.shoppinglist.shoppinglist.payload.shoppingcart;
+package com.shoppinglist.shoppinglist.payload.dto.shoppingcart;
 
 import java.util.Date;
 import java.util.UUID;

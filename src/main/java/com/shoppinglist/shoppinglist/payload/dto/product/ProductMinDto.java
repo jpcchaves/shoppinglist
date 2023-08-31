@@ -1,4 +1,4 @@
-package com.shoppinglist.shoppinglist.payload.product;
+package com.shoppinglist.shoppinglist.payload.dto.product;
 
 import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 
@@ -18,7 +18,7 @@ public class ProductMinDto {
         this.name = name;
         this.urgencyLevel = urgencyLevel;
     }
-    
+
     public Long getId() {
         return id;
     }

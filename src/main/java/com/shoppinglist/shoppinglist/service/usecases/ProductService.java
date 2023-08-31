@@ -1,11 +1,10 @@
 package com.shoppinglist.shoppinglist.service.usecases;
 
 import com.itextpdf.text.DocumentException;
-import com.shoppinglist.shoppinglist.domain.entities.Product;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.product.ProductCreateDto;
-import com.shoppinglist.shoppinglist.payload.product.ProductMinDto;
-import com.shoppinglist.shoppinglist.payload.product.ProductUpdateDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.ProductCreateDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.ProductMinDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.ProductUpdateDto;
 
 import java.util.List;
 

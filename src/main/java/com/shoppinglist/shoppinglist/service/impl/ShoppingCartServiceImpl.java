@@ -3,8 +3,7 @@ package com.shoppinglist.shoppinglist.service.impl;
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartListDto;
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartMinDto;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
 import org.springframework.stereotype.Service;
@@ -47,7 +46,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         return shoppingCartListDtos;
     }
-    
+
     private ShoppingCartListDto buildNewShoppingCart(ShoppingCart shoppingCart) {
         return shoppingCartFactory
                 .createShoppingCart(

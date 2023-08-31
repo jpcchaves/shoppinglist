@@ -1,22 +1,19 @@
-package com.shoppinglist.shoppinglist.payload.product;
+package com.shoppinglist.shoppinglist.payload.dto.product;
 
 import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 
-public class ProductCreateDto {
+public class ProductUpdateDto {
     private String name;
     private UrgencyLevel urgencyLevel;
-    private Long shoppingCartId;
 
-    public ProductCreateDto() {
+    public ProductUpdateDto() {
     }
 
-    public ProductCreateDto(
+    public ProductUpdateDto(
             String name,
-            UrgencyLevel urgencyLevel,
-            Long shoppingCartId) {
+            UrgencyLevel urgencyLevel) {
         this.name = name;
         this.urgencyLevel = urgencyLevel;
-        this.shoppingCartId = shoppingCartId;
     }
 
     public String getName() {
@@ -33,13 +30,5 @@ public class ProductCreateDto {
 
     public void setUrgencyLevel(UrgencyLevel urgencyLevel) {
         this.urgencyLevel = urgencyLevel;
-    }
-
-    public Long getShoppingCartId() {
-        return shoppingCartId;
-    }
-
-    public void setShoppingCartId(Long shoppingCartId) {
-        this.shoppingCartId = shoppingCartId;
     }
 }

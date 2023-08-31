@@ -2,10 +2,8 @@ package com.shoppinglist.shoppinglist.controller;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartListDto;
-import com.shoppinglist.shoppinglist.payload.shoppingcart.ShoppingCartMinDto;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
