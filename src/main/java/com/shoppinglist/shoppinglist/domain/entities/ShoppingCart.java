@@ -108,4 +108,12 @@ public class ShoppingCart {
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
