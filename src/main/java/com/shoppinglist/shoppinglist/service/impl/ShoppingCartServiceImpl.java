@@ -1,6 +1,7 @@
 package com.shoppinglist.shoppinglist.service.impl;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
+import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartCreateDto;
@@ -40,6 +41,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ApiMessageResponse create(ShoppingCartCreateDto request) {
         ShoppingCart createdShoppingCart = shoppingCartRepository.save(mapperUtils.parseObject(request, ShoppingCart.class));
         return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
+    }
+
+    @Override
+    public ApiMessageResponse delete(Long shoppingCartId) {
+        ShoppingCart shoppingCart = shoppingCartRepository
+                .findById(shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lista de compras não encontrada com o ID informado: " + shoppingCartId));
+
+        shoppingCartRepository.delete(shoppingCart);
+
+        return new ApiMessageResponse("Lista de compras deletada com sucesso!");
     }
 
     private List<ShoppingCartListDto> buildShoppingCartList(List<ShoppingCart> shoppingCarts) {

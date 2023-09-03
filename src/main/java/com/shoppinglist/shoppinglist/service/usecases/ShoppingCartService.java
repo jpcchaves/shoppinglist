@@ -10,4 +10,6 @@ public interface ShoppingCartService {
     ApiMessageResponse create(ShoppingCartCreateDto request);
 
     List<ShoppingCartListDto> getAll();
+
+    ApiMessageResponse delete(Long shoppingCartId);
 }
