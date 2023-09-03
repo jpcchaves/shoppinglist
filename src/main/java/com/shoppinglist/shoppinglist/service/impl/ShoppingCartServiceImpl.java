@@ -4,7 +4,7 @@ import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartCreateDto;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartRequestDto;
 import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
@@ -38,20 +38,37 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
 
     @Override
-    public ApiMessageResponse create(ShoppingCartCreateDto request) {
+    public ApiMessageResponse create(ShoppingCartRequestDto request) {
         ShoppingCart createdShoppingCart = shoppingCartRepository.save(mapperUtils.parseObject(request, ShoppingCart.class));
         return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
     }
 
     @Override
+    public ApiMessageResponse update(
+            Long shoppingCartId,
+            ShoppingCartRequestDto request) {
+        ShoppingCart shoppingCart = fetchShoppingCart(shoppingCartId);
+        shoppingCart.setName(request.getName());
+        shoppingCart.setDescription(request.getDescription());
+
+        shoppingCartRepository.save(shoppingCart);
+
+        return new ApiMessageResponse("Lista de compras atualizada com sucesso!");
+    }
+
+    @Override
     public ApiMessageResponse delete(Long shoppingCartId) {
-        ShoppingCart shoppingCart = shoppingCartRepository
-                .findById(shoppingCartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Lista de compras não encontrada com o ID informado: " + shoppingCartId));
+        ShoppingCart shoppingCart = fetchShoppingCart(shoppingCartId);
 
         shoppingCartRepository.delete(shoppingCart);
 
         return new ApiMessageResponse("Lista de compras deletada com sucesso!");
+    }
+
+    private ShoppingCart fetchShoppingCart(Long shoppingCartId) {
+        return shoppingCartRepository
+                .findById(shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lista de compras não encontrada com o ID informado: " + shoppingCartId));
     }
 
     private List<ShoppingCartListDto> buildShoppingCartList(List<ShoppingCart> shoppingCarts) {

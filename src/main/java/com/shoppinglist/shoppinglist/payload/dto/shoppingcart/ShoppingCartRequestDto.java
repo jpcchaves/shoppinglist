@@ -1,13 +1,13 @@
 package com.shoppinglist.shoppinglist.payload.dto.shoppingcart;
 
-public class ShoppingCartCreateDto {
+public class ShoppingCartRequestDto {
     private String name;
     private String description;
 
-    public ShoppingCartCreateDto() {
+    public ShoppingCartRequestDto() {
     }
 
-    public ShoppingCartCreateDto(
+    public ShoppingCartRequestDto(
             String name,
             String description) {
         this.name = name;
