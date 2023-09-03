@@ -30,4 +30,9 @@ public class ShoppingCartController {
     public ResponseEntity<ApiMessageResponse> create(@RequestBody ShoppingCartCreateDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(shoppingCartService.create(request));
     }
+
+    @DeleteMapping("/{shoppingCartId}")
+    private ResponseEntity<ApiMessageResponse> delete(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
+        return ResponseEntity.ok(shoppingCartService.delete(shoppingCartId));
+    }
 }
