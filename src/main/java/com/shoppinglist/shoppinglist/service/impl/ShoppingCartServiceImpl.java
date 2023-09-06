@@ -1,18 +1,19 @@
 package com.shoppinglist.shoppinglist.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.factory.shoppingcart.ShoppingCartFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartRequestDto;
 import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartListDto;
+import com.shoppinglist.shoppinglist.payload.dto.shoppingcart.ShoppingCartRequestDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ShoppingCartService;
 import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -36,11 +37,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return buildShoppingCartList(shoppingCarts);
     }
 
+    @Override
+    public ShoppingCartListDto getById(Long shoppingCartId) {
+        ShoppingCart shoppingCart = fetchShoppingCart(shoppingCartId);
+
+        return mapperUtils.parseObject(shoppingCart, ShoppingCartListDto.class);
+    }
 
     @Override
     public ApiMessageResponse create(ShoppingCartRequestDto request) {
-        ShoppingCart createdShoppingCart = shoppingCartRepository.save(mapperUtils.parseObject(request, ShoppingCart.class));
-        return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " " + createdShoppingCart.getName());
+        ShoppingCart createdShoppingCart = shoppingCartRepository
+                .save(mapperUtils.parseObject(request, ShoppingCart.class));
+        return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " "
+                + createdShoppingCart.getName());
     }
 
     @Override
@@ -68,7 +77,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private ShoppingCart fetchShoppingCart(Long shoppingCartId) {
         return shoppingCartRepository
                 .findById(shoppingCartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Lista de compras não encontrada com o ID informado: " + shoppingCartId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Lista de compras não encontrada com o ID informado: " + shoppingCartId));
     }
 
     private List<ShoppingCartListDto> buildShoppingCartList(List<ShoppingCart> shoppingCarts) {
@@ -89,7 +99,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         shoppingCart.getName(),
                         shoppingCart.getDescription(),
                         shoppingCart.getProducts().size(),
-                        shoppingCart.getCreatedAt()
-                );
+                        shoppingCart.getCreatedAt());
     }
+
 }
