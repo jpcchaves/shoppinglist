@@ -32,7 +32,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<ShoppingCartListDto> getAll() {
-        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAll();
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAllByOrderByCreatedAtDesc();
 
         return buildShoppingCartList(shoppingCarts);
     }
