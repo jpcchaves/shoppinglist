@@ -2,6 +2,7 @@ package com.shoppinglist.shoppinglist.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,7 +36,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiMessageResponse> create(@RequestBody ShoppingCartRequestDto request) {
+    public ResponseEntity<ApiMessageResponse> create(@Valid @RequestBody ShoppingCartRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(shoppingCartService.create(request));
     }
 
@@ -48,7 +49,7 @@ public class ShoppingCartController {
     @PutMapping("/{shoppingCartId}")
     private ResponseEntity<ApiMessageResponse> update(
             @PathVariable(name = "shoppingCartId") Long id,
-            @RequestBody ShoppingCartRequestDto requestDto) {
+            @Valid @RequestBody ShoppingCartRequestDto requestDto) {
         return ResponseEntity.ok(shoppingCartService.update(id, requestDto));
     }
 

@@ -1,6 +1,9 @@
 package com.shoppinglist.shoppinglist.payload.dto.shoppingcart;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ShoppingCartRequestDto {
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
     private String description;
 
