@@ -4,12 +4,14 @@ import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.exception.model.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @ControllerAdvice
@@ -37,4 +39,17 @@ public class CustomExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public final ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex,
+            WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), Objects.requireNonNull(
+                ex.getFieldError()).getDefaultMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+
 }
