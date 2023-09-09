@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductMinDto> getProducts(Long shoppingCartId) {
         verifyIfShoppingCartExists(shoppingCartId);
-        return mapperUtils.parseListObjects(getProductsByShoppingCart(shoppingCartId), ProductMinDto.class);
+        return mapperUtils.parseListObjects(getSortedProducts(getProductsByShoppingCart(shoppingCartId)), ProductMinDto.class);
     }
 
     @Override
