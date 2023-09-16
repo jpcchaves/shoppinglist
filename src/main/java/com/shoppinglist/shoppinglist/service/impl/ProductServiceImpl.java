@@ -8,6 +8,7 @@ import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.factory.product.ProductFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductCreateDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.ProductListDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductMinDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductUpdateDto;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
@@ -48,9 +49,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductMinDto> getProducts(Long shoppingCartId) {
-        verifyIfShoppingCartExists(shoppingCartId);
-        return mapperUtils.parseListObjects(getSortedProducts(getProductsByShoppingCart(shoppingCartId)), ProductMinDto.class);
+    public ProductListDto productsList(Long shoppingCartId) {
+        ShoppingCart shoppingCart = verifyIfShoppingCartExists(shoppingCartId);
+        List<Product> products = getSortedProducts(getProductsByShoppingCart(shoppingCartId));
+        return new ProductListDto(shoppingCart.getName(), mapperUtils.parseListObjects(products, ProductMinDto.class));
     }
 
     @Override
@@ -105,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
         final String PRODUCTS_HEADER_NAME = "Produtos";
         final String URGENCY_HEADER_NAME = "Urgência";
 
-        List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(getProducts(shoppingCartId), Product.class));
+        List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(productsList(shoppingCartId).getProducts(), Product.class));
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
@@ -152,10 +154,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByShoppingCart_Id(shoppingCartId);
     }
 
-    private void verifyIfShoppingCartExists(Long shoppingCartId) {
-        if (!shoppingCartRepository.existsById(shoppingCartId)) {
-            throw new ResourceNotFoundException("O carrinho informado não existe");
-        }
+    private ShoppingCart verifyIfShoppingCartExists(Long shoppingCartId) {
+        return shoppingCartRepository
+                .findById(shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lista de compras não encontrada"));
     }
 
     private Product getShoppingCartProductById(
