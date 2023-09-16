@@ -3,6 +3,7 @@ package com.shoppinglist.shoppinglist.controller;
 import com.itextpdf.text.DocumentException;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductCreateDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.ProductListDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductMinDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductUpdateDto;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
@@ -25,8 +26,8 @@ public class ProductController {
     }
 
     @GetMapping("/{shoppingCartId}")
-    public ResponseEntity<List<ProductMinDto>> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
-        return ResponseEntity.ok(productService.getProducts(shoppingCartId));
+    public ResponseEntity<ProductListDto> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
+        return ResponseEntity.ok(productService.productsList(shoppingCartId));
     }
 
     @GetMapping("/{shoppingCartId}/{id}")
