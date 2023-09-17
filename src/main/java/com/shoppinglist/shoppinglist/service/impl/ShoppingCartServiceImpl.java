@@ -32,10 +32,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<ShoppingCartListDto> getAll() {
-        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findAllByOrderByCreatedAtDesc();
+        List<ShoppingCart> shoppingCarts = fetchShoppingCarts();
 
         return buildShoppingCartList(shoppingCarts);
     }
+
 
     @Override
     public ShoppingCartListDto getById(Long shoppingCartId) {
@@ -74,6 +75,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return new ApiMessageResponse("Lista de compras deletada com sucesso!");
     }
 
+    private List<ShoppingCart> fetchShoppingCarts() {
+        return shoppingCartRepository.findAllByOrderByCreatedAtDesc();
+    }
+    
     private ShoppingCart fetchShoppingCart(Long shoppingCartId) {
         return shoppingCartRepository
                 .findById(shoppingCartId)
