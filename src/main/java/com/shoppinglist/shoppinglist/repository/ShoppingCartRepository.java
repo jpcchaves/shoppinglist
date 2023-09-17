@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
     List<ShoppingCart> findAllByOrderByCreatedAtDesc();
+
+    List<ShoppingCart> findByNameContainingIgnoreCase(String name);
 }
