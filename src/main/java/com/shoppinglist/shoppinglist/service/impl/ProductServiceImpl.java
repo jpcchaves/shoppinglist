@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
         ShoppingCart shoppingCart = fetchShoppingCartById(createProduct.getShoppingCartId());
 
         Product product = buildNewProduct(createProduct, shoppingCart);
-        Product savedProduct = productRepository.save(product);
+        Product savedProduct = saveProduct(product);
 
         return new ApiMessageResponse("Produto adicionado com sucesso: " + savedProduct.getName() + ", ID: " + savedProduct.getId());
     }
@@ -75,8 +75,12 @@ public class ProductServiceImpl implements ProductService {
 
         updateProductAttributes(product, updateProduct);
 
-        productRepository.save(product);
+        saveProduct(product);
         return new ApiMessageResponse("Produto atualizado com sucesso");
+    }
+
+    private Product saveProduct(Product product) {
+        return productRepository.save(product);
     }
 
     private Product fetchProductById(
