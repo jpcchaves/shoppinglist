@@ -59,11 +59,12 @@ public class ProductServiceImpl implements ProductService {
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
         ShoppingCart shoppingCart = fetchShoppingCartById(createProduct.getShoppingCartId());
 
-        Product product = productFactory.createProduct(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
+        Product product = buildNewProduct(createProduct, shoppingCart);
         Product savedProduct = productRepository.save(product);
 
         return new ApiMessageResponse("Produto adicionado com sucesso: " + savedProduct.getName() + ", ID: " + savedProduct.getId());
     }
+
 
     @Override
     public ApiMessageResponse updateProduct(
@@ -141,6 +142,12 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
 
         return new ApiMessageResponse("Produto removido com sucesso!");
+    }
+
+    private Product buildNewProduct(
+            ProductCreateDto createProduct,
+            ShoppingCart shoppingCart) {
+        return productFactory.createProduct(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
     }
 
     private void updateProductAttributes(
