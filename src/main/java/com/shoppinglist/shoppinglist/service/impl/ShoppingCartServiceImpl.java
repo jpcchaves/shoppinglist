@@ -31,9 +31,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public List<ShoppingCartListDto> getAll() {
-        List<ShoppingCart> shoppingCarts = fetchShoppingCarts();
+    public List<ShoppingCartListDto> getAll(String name) {
+        List<ShoppingCart> shoppingCarts = new ArrayList<>();
+        if (name == null) {
+            shoppingCarts.addAll(fetchShoppingCarts());
 
+            return buildShoppingCartList(shoppingCarts);
+        }
+
+        shoppingCarts.addAll(shoppingCartRepository.findByNameContainingIgnoreCase(name));
         return buildShoppingCartList(shoppingCarts);
     }
 
@@ -75,10 +81,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return new ApiMessageResponse("Lista de compras deletada com sucesso!");
     }
 
+    @Override
+    public List<ShoppingCartListDto> filterByName(String name) {
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByNameContainingIgnoreCase(name);
+
+        return mapperUtils.parseListObjects(shoppingCarts, ShoppingCartListDto.class);
+    }
+
     private List<ShoppingCart> fetchShoppingCarts() {
         return shoppingCartRepository.findAllByOrderByCreatedAtDesc();
     }
-    
+
     private ShoppingCart fetchShoppingCart(Long shoppingCartId) {
         return shoppingCartRepository
                 .findById(shoppingCartId)
