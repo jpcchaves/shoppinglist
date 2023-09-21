@@ -91,6 +91,12 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> filterByName(
             String name,
             Long shoppingCartId) {
+        return findByName(name, shoppingCartId);
+    }
+
+    private List<Product> findByName(
+            String name,
+            Long shoppingCartId) {
         return productRepository.findByNameContainingIgnoreCaseAndShoppingCart_Id(name, shoppingCartId);
     }
 
