@@ -1,8 +1,10 @@
 package com.shoppinglist.shoppinglist.service.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.shoppinglist.shoppinglist.domain.entities.Product;
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.factory.product.ProductFactory;
@@ -11,24 +13,15 @@ import com.shoppinglist.shoppinglist.payload.dto.product.ProductCreateDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductListDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductMinDto;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductUpdateDto;
+import com.shoppinglist.shoppinglist.repository.ProductRepository;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
+import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
+import com.shoppinglist.shoppinglist.utils.product.ProductComparator;
 import org.springframework.stereotype.Service;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.shoppinglist.shoppinglist.domain.entities.Product;
-import com.shoppinglist.shoppinglist.utils.product.ProductComparator;
-import com.shoppinglist.shoppinglist.repository.ProductRepository;
-import com.shoppinglist.shoppinglist.service.usecases.ProductService;
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -56,6 +49,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductListDto productsList(
+            Long shoppingCartId,
+            String name) {
+        ShoppingCart shoppingCart = verifyIfShoppingCartExists(shoppingCartId);
+
+
+        if (name == null) {
+            return this.productsList(shoppingCartId);
+        }
+
+        List<Product> productsList = filterByName(name, shoppingCartId);
+        return new ProductListDto(shoppingCart.getName(), mapperUtils.parseListObjects(productsList, ProductMinDto.class));
+    }
+
+    @Override
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
         ShoppingCart shoppingCart = fetchShoppingCartById(createProduct.getShoppingCartId());
 
@@ -77,6 +85,13 @@ public class ProductServiceImpl implements ProductService {
 
         saveProduct(product);
         return new ApiMessageResponse("Produto atualizado com sucesso");
+    }
+
+    @Override
+    public List<Product> filterByName(
+            String name,
+            Long shoppingCartId) {
+        return productRepository.findByNameContainingIgnoreCaseAndShoppingCart_Id(name, shoppingCartId);
     }
 
     private Product saveProduct(Product product) {
