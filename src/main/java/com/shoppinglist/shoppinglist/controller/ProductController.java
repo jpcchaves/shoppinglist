@@ -26,8 +26,10 @@ public class ProductController {
     }
 
     @GetMapping("/{shoppingCartId}")
-    public ResponseEntity<ProductListDto> getProducts(@PathVariable(name = "shoppingCartId") Long shoppingCartId) {
-        return ResponseEntity.ok(productService.productsList(shoppingCartId));
+    public ResponseEntity<ProductListDto> getProducts(
+            @PathVariable(name = "shoppingCartId") Long shoppingCartId,
+            @RequestParam(name = "name", required = false) String name) {
+        return ResponseEntity.ok(productService.productsList(shoppingCartId, name));
     }
 
     @GetMapping("/{shoppingCartId}/{id}")
@@ -66,5 +68,4 @@ public class ProductController {
         httpHeaders.setContentType(MediaType.APPLICATION_PDF);
         return new ResponseEntity<>(productService.getProductsListPdf(shoppingCartId), httpHeaders, HttpStatus.OK);
     }
-
 }
