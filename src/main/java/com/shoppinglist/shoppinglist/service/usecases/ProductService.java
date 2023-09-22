@@ -3,10 +3,7 @@ package com.shoppinglist.shoppinglist.service.usecases;
 import com.itextpdf.text.DocumentException;
 import com.shoppinglist.shoppinglist.domain.entities.Product;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductCreateDto;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductListDto;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductMinDto;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductUpdateDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.*;
 
 import java.util.List;
 
@@ -18,6 +15,9 @@ public interface ProductService {
     ProductListDto productsList(
             Long shoppingCartId,
             String name);
+
+    ProductListDtoV2 productsListV2(
+            Long shoppingCartId);
 
     List<Product> filterByName(
             String name,

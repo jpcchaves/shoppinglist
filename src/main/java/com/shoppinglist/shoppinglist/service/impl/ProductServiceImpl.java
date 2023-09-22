@@ -9,10 +9,7 @@ import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
 import com.shoppinglist.shoppinglist.exception.ResourceNotFoundException;
 import com.shoppinglist.shoppinglist.factory.product.ProductFactory;
 import com.shoppinglist.shoppinglist.payload.dto.ApiMessageResponse;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductCreateDto;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductListDto;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductMinDto;
-import com.shoppinglist.shoppinglist.payload.dto.product.ProductUpdateDto;
+import com.shoppinglist.shoppinglist.payload.dto.product.*;
 import com.shoppinglist.shoppinglist.repository.ProductRepository;
 import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
@@ -21,6 +18,7 @@ import com.shoppinglist.shoppinglist.utils.product.ProductComparator;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -46,6 +44,24 @@ public class ProductServiceImpl implements ProductService {
         ShoppingCart shoppingCart = verifyIfShoppingCartExists(shoppingCartId);
         List<Product> products = getSortedProducts(getProductsByShoppingCart(shoppingCartId));
         return new ProductListDto(shoppingCart.getName(), mapperUtils.parseListObjects(products, ProductMinDto.class));
+    }
+
+    @Override
+    public ProductListDtoV2 productsListV2(Long shoppingCartId) {
+        ShoppingCart shoppingCart = verifyIfShoppingCartExists(shoppingCartId);
+        List<Product> products = getSortedProducts(getProductsByShoppingCart(shoppingCartId));
+        List<ProductDto> productDtos = mapperUtils.parseListObjects(products, ProductDto.class);
+        return new ProductListDtoV2(shoppingCart.getName(), productDtos, calculateShoppingCartTotalPrice(productDtos));
+    }
+
+    private BigDecimal calculateShoppingCartTotalPrice(List<ProductDto> products) {
+        BigDecimal totalPrice = new BigDecimal(0);
+
+        for (ProductDto product : products) {
+            totalPrice = totalPrice.add(product.getTotalPrice());
+        }
+
+        return totalPrice;
     }
 
     @Override
