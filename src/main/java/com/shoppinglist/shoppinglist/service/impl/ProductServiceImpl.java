@@ -15,10 +15,10 @@ import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
 import com.shoppinglist.shoppinglist.utils.product.ProductComparator;
+import com.shoppinglist.shoppinglist.utils.product.ProductUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -51,18 +51,9 @@ public class ProductServiceImpl implements ProductService {
         ShoppingCart shoppingCart = verifyIfShoppingCartExists(shoppingCartId);
         List<Product> products = getSortedProducts(getProductsByShoppingCart(shoppingCartId));
         List<ProductDto> productDtos = mapperUtils.parseListObjects(products, ProductDto.class);
-        return new ProductListDtoV2(shoppingCart.getName(), productDtos, calculateShoppingCartTotalPrice(productDtos));
+        return new ProductListDtoV2(shoppingCart.getName(), productDtos, ProductUtils.calculateShoppingCartTotalPrice(productDtos));
     }
 
-    private BigDecimal calculateShoppingCartTotalPrice(List<ProductDto> products) {
-        BigDecimal totalPrice = new BigDecimal(0);
-
-        for (ProductDto product : products) {
-            totalPrice = totalPrice.add(product.getTotalPrice());
-        }
-
-        return totalPrice;
-    }
 
     @Override
     public ProductListDto productsList(
@@ -109,6 +100,7 @@ public class ProductServiceImpl implements ProductService {
             Long shoppingCartId) {
         return findByName(name, shoppingCartId);
     }
+
 
     private List<Product> findByName(
             String name,
