@@ -24,7 +24,7 @@ public class ShoppingCart {
     @Column(nullable = false, unique = true)
     private UUID uuid = UUID.randomUUID();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "shopping_cart_id", referencedColumnName = "id")
     @JsonManagedReference
     private List<Product> products = new ArrayList<>();
