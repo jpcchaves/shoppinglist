@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
     public ApiMessageResponse createProduct(ProductCreateDto createProduct) {
         ShoppingCart shoppingCart = fetchShoppingCartById(createProduct.getShoppingCartId());
 
-        Product product = buildNewProduct(createProduct, shoppingCart);
+        Product product = buildNewProductWithPrice(createProduct, shoppingCart);
         Product savedProduct = saveProduct(product);
 
         return new ApiMessageResponse("Produto adicionado com sucesso: " + savedProduct.getName() + ", ID: " + savedProduct.getId());
@@ -181,6 +181,12 @@ public class ProductServiceImpl implements ProductService {
             ProductCreateDto createProduct,
             ShoppingCart shoppingCart) {
         return productFactory.createProduct(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart);
+    }
+
+    private Product buildNewProductWithPrice(
+            ProductCreateDto createProduct,
+            ShoppingCart shoppingCart) {
+        return productFactory.createProductWithPrice(createProduct.getName(), createProduct.getUrgencyLevel(), shoppingCart, createProduct.getProductPrice(), createProduct.getProductQuantity());
     }
 
     private void updateProductAttributes(
