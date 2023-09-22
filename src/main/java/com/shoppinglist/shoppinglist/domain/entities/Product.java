@@ -5,6 +5,7 @@ import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -15,6 +16,12 @@ public class Product {
     private Long id;
     @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, columnDefinition = "NUMERIC(8,2)")
+    private BigDecimal productPrice;
+
+    @Column(nullable = false, length = 3)
+    private Integer productQuantity;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false)
@@ -48,6 +55,23 @@ public class Product {
             Date createdAt) {
         this.id = id;
         this.name = name;
+        this.urgencyLevel = urgencyLevel;
+        this.shoppingCart = shoppingCart;
+        this.createdAt = createdAt;
+    }
+
+    public Product(
+            Long id,
+            String name,
+            BigDecimal productPrice,
+            Integer productQuantity,
+            UrgencyLevel urgencyLevel,
+            ShoppingCart shoppingCart,
+            Date createdAt) {
+        this.id = id;
+        this.name = name;
+        this.productPrice = productPrice;
+        this.productQuantity = productQuantity;
         this.urgencyLevel = urgencyLevel;
         this.shoppingCart = shoppingCart;
         this.createdAt = createdAt;
@@ -91,5 +115,21 @@ public class Product {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 }
