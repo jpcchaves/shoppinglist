@@ -2,10 +2,14 @@ package com.shoppinglist.shoppinglist.payload.dto.product;
 
 import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 
+import java.math.BigDecimal;
+
 public class ProductCreateDto {
     private String name;
     private UrgencyLevel urgencyLevel;
     private Long shoppingCartId;
+    private BigDecimal productPrice;
+    private Integer productQuantity;
 
     public ProductCreateDto() {
     }
@@ -13,10 +17,14 @@ public class ProductCreateDto {
     public ProductCreateDto(
             String name,
             UrgencyLevel urgencyLevel,
-            Long shoppingCartId) {
+            Long shoppingCartId,
+            BigDecimal productPrice,
+            Integer productQuantity) {
         this.name = name;
         this.urgencyLevel = urgencyLevel;
         this.shoppingCartId = shoppingCartId;
+        this.productPrice = productPrice;
+        this.productQuantity = productQuantity;
     }
 
     public String getName() {
@@ -41,5 +49,21 @@ public class ProductCreateDto {
 
     public void setShoppingCartId(Long shoppingCartId) {
         this.shoppingCartId = shoppingCartId;
+    }
+
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 }
