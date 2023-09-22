@@ -61,20 +61,17 @@ public class Product {
     }
 
     public Product(
-            Long id,
             String name,
             BigDecimal productPrice,
             Integer productQuantity,
             UrgencyLevel urgencyLevel,
-            ShoppingCart shoppingCart,
-            Date createdAt) {
-        this.id = id;
+            ShoppingCart shoppingCart
+    ) {
         this.name = name;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
         this.urgencyLevel = urgencyLevel;
         this.shoppingCart = shoppingCart;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {
