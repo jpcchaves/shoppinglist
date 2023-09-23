@@ -194,6 +194,8 @@ public class ProductServiceImpl implements ProductService {
             ProductUpdateDto productUpdateDto) {
         product.setName(productUpdateDto.getName());
         product.setUrgencyLevel(productUpdateDto.getUrgencyLevel());
+        product.setProductPrice(productUpdateDto.getProductPrice());
+        product.setProductQuantity(productUpdateDto.getProductQuantity());
     }
 
     private List<Product> getProductsByShoppingCart(Long shoppingCartId) {

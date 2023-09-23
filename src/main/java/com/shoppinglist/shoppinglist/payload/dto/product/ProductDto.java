@@ -71,7 +71,7 @@ public class ProductDto {
     }
 
     public BigDecimal getTotalPrice() {
-        return productPrice.multiply(BigDecimal.valueOf(getProductQuantity()));
+        return this.productPrice.multiply(BigDecimal.valueOf(getProductQuantity()));
     }
 
     public void setTotalPrice(BigDecimal totalPrice) {
