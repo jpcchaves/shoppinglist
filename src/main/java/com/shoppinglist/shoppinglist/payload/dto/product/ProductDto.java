@@ -3,6 +3,8 @@ package com.shoppinglist.shoppinglist.payload.dto.product;
 import com.shoppinglist.shoppinglist.domain.Enum.UrgencyLevel;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class ProductDto {
     private Long id;
@@ -71,7 +73,9 @@ public class ProductDto {
     }
 
     public BigDecimal getTotalPrice() {
-        return this.productPrice.multiply(BigDecimal.valueOf(getProductQuantity()));
+        BigDecimal totalPrice = this.productPrice.multiply(BigDecimal.valueOf(getProductQuantity()));
+        totalPrice = totalPrice.setScale(2, RoundingMode.HALF_UP);
+        return totalPrice;
     }
 
     public void setTotalPrice(BigDecimal totalPrice) {
