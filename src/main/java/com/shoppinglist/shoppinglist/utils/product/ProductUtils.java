@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ProductUtils {
 
-    public static final BigDecimal calculateShoppingCartTotalPrice(List<ProductDto> products) {
+    public static BigDecimal calculateShoppingCartTotalPrice(List<ProductDto> products) {
         BigDecimal totalPrice = new BigDecimal(0);
 
         for (ProductDto product : products) {
@@ -16,4 +16,5 @@ public class ProductUtils {
 
         return totalPrice;
     }
+
 }
