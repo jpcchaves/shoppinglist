@@ -144,8 +144,9 @@ public class ProductServiceImpl implements ProductService {
         final String PRODUCT_PRICE_HEADER = "Preço";
         final String PRODUCT_TOTAL_PRICE = "Total";
 
+        List<ProductMinDto> productsList = productsList(shoppingCartId).getProducts();
 
-        List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(productsList(shoppingCartId).getProducts(), Product.class));
+        List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(productsList, Product.class));
 
         ByteArrayOutputStream outputStream = createNewByteArrayOutputStream();
         Document document = createNewDocument();
@@ -169,6 +170,11 @@ public class ProductServiceImpl implements ProductService {
         table.addCell(productTotalPriceHeader);
 
         generateTableCells(sortedProductList, table);
+
+        List<ProductDto> productDtos = mapperUtils.parseListObjects(productsList, ProductDto.class);
+
+        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: R$ " + ProductUtils.calculateShoppingCartTotalPrice(productDtos)), 6, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        table.addCell(totalPriceCell);
 
         document.add(table);
         document.close();
