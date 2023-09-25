@@ -140,6 +140,10 @@ public class ProductServiceImpl implements ProductService {
     public byte[] getProductsListPdf(Long shoppingCartId) throws DocumentException {
         final String PRODUCTS_HEADER_NAME = "Produtos";
         final String URGENCY_HEADER_NAME = "Urgência";
+        final String PRODUCT_QUANTITY_HEADER = "Quantitidade";
+        final String PRODUCT_PRICE_HEADER = "Preço";
+        final String PRODUCT_TOTAL_PRICE = "Total";
+
 
         List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(productsList(shoppingCartId).getProducts(), Product.class));
 
@@ -149,14 +153,20 @@ public class ProductServiceImpl implements ProductService {
         PdfWriter.getInstance(document, outputStream);
         document.open();
 
-        PdfPTable table = createNewPdfTable(4);
+        PdfPTable table = createNewPdfTable(6);
 
 
-        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 3, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
-        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 1, 16f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 10f);
+        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell productQuantityHeader = buildPdfCell(createPhrase(PRODUCT_QUANTITY_HEADER), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell productPriceHeader = buildPdfCell(createPhrase(PRODUCT_PRICE_HEADER), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell productTotalPriceHeader = buildPdfCell(createPhrase(PRODUCT_TOTAL_PRICE), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
 
         table.addCell(productsHeader);
         table.addCell(urgencyHeader);
+        table.addCell(productQuantityHeader);
+        table.addCell(productPriceHeader);
+        table.addCell(productTotalPriceHeader);
 
         generateTableCells(sortedProductList, table);
 
@@ -269,11 +279,17 @@ public class ProductServiceImpl implements ProductService {
             List<Product> productList,
             PdfPTable table) {
         for (Product product : productList) {
-            PdfPCell productNameCell = generateCell(product, product.getName(), 3, 5f);
+            PdfPCell productNameCell = generateCell(product, product.getName(), 2, 5f);
             PdfPCell urgencyCell = generateCell(product, product.getUrgencyLevel().getMessage(), 1, 5f);
+            PdfPCell quantityCell = generateCell(product, product.getProductQuantity().toString(), 1, 5f);
+            PdfPCell priceCell = generateCell(product, "R$ " + product.getProductPrice().toString(), 1, 5f);
+            PdfPCell totalPriceCell = generateCell(product, "R$ " + product.getProductPrice().toString(), 1, 5f);
 
             table.addCell(productNameCell);
             table.addCell(urgencyCell);
+            table.addCell(quantityCell);
+            table.addCell(priceCell);
+            table.addCell(totalPriceCell);
         }
     }
 
@@ -289,6 +305,21 @@ public class ProductServiceImpl implements ProductService {
         pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
         pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         pdfPCell.setBackgroundColor(defineCellColor(product));
+        return pdfPCell;
+    }
+
+    private PdfPCell generateCell(
+            String phrase,
+            int cols,
+            float padding
+    ) {
+        PdfPCell pdfPCell = new PdfPCell();
+        pdfPCell.setColspan(cols);
+        pdfPCell.setPadding(padding);
+        pdfPCell.setPhrase(new Phrase(phrase));
+        pdfPCell.setVerticalAlignment(Element.ALIGN_CENTER);
+        pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        pdfPCell.setBackgroundColor(BaseColor.WHITE);
         return pdfPCell;
     }
 
@@ -315,7 +346,5 @@ public class ProductServiceImpl implements ProductService {
             }
         }
     }
-
-    ;
 
 }
