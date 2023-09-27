@@ -163,7 +163,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDto> productDtos = mapperUtils.parseListObjects(productsList, ProductDto.class);
 
-        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: R$ " + getTotalPrice(productDtos)), 10, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: R$ " + ProductUtils.getTotalPriceNormalized(productDtos)), 10, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
         table.addCell(totalPriceCell);
 
         document.add(table);
@@ -293,8 +293,8 @@ public class ProductServiceImpl implements ProductService {
             PdfPCell productNameCell = generateCell(product, product.getName(), 2, 3f);
             PdfPCell urgencyCell = generateCell(product, product.getUrgencyLevel().getMessage(), 2, 3f);
             PdfPCell quantityCell = generateCell(product, product.getProductQuantity().toString(), 2, 3f);
-            PdfPCell priceCell = generateCell(product, "R$ " + product.getProductPrice().toString().replace('.', ','), 2, 3f);
-            PdfPCell totalPriceCell = generateCell(product, "R$ " + product.getProductPrice().toString().replace('.', ','), 2, 3f);
+            PdfPCell priceCell = generateCell(product, ProductUtils.normalizeCurrency(product.getProductPrice()), 2, 3f);
+            PdfPCell totalPriceCell = generateCell(product, ProductUtils.normalizeCurrency(product.getProductPrice()), 2, 3f);
 
             table.addCell(productNameCell);
             table.addCell(urgencyCell);
