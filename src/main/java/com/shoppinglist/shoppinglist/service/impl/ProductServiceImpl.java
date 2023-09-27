@@ -22,12 +22,9 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final ProductRepository productRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductTableHeaders productTableHeaders;
