@@ -29,6 +29,19 @@ public class ProductUtils {
         return NumberFormat.getCurrencyInstance(brazilLocale).format(rawPrice);
     }
 
+    public static String normalizeCurrency(
+            String lang,
+            String region,
+            BigDecimal rawPrice) {
+        Locale brazilLocale = new Locale
+                .Builder()
+                .setLanguage(lang)
+                .setRegion(region)
+                .build();
+
+        return NumberFormat.getCurrencyInstance(brazilLocale).format(rawPrice);
+    }
+
     public static String getTotalPriceNormalized(List<ProductDto> products) {
         return normalizeCurrency(calculateShoppingCartTotalPrice(products));
     }
