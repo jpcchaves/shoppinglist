@@ -15,26 +15,34 @@ import com.shoppinglist.shoppinglist.repository.ShoppingCartRepository;
 import com.shoppinglist.shoppinglist.service.usecases.ProductService;
 import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
 import com.shoppinglist.shoppinglist.utils.product.ProductComparator;
+import com.shoppinglist.shoppinglist.utils.product.ProductTableHeaders;
 import com.shoppinglist.shoppinglist.utils.product.ProductUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     private final ProductRepository productRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final ProductTableHeaders productTableHeaders;
     private final ProductFactory productFactory;
     private final MapperUtils mapperUtils;
 
     public ProductServiceImpl(
             ProductRepository productRepository,
             ShoppingCartRepository shoppingCartRepository,
+            ProductTableHeaders productTableHeaders,
             ProductFactory productFactory,
             MapperUtils mapperUtils) {
         this.productRepository = productRepository;
         this.shoppingCartRepository = shoppingCartRepository;
+        this.productTableHeaders = productTableHeaders;
         this.productFactory = productFactory;
         this.mapperUtils = mapperUtils;
     }
@@ -138,12 +146,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public byte[] getProductsListPdf(Long shoppingCartId) throws DocumentException {
-        final String PRODUCTS_HEADER_NAME = "Produtos";
-        final String URGENCY_HEADER_NAME = "Urgência";
-        final String PRODUCT_QUANTITY_HEADER = "Quantitidade";
-        final String PRODUCT_PRICE_HEADER = "Preço";
-        final String PRODUCT_TOTAL_PRICE = "Total";
-
         List<ProductMinDto> productsList = productsList(shoppingCartId).getProducts();
 
         List<Product> sortedProductList = getSortedProducts(mapperUtils.parseListObjects(productsList, Product.class));
@@ -156,18 +158,9 @@ public class ProductServiceImpl implements ProductService {
 
         PdfPTable table = createNewPdfTable(10);
 
+        List<PdfPCell> tableHeaders = generateTableHeaders();
 
-        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
-        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
-        PdfPCell productQuantityHeader = buildPdfCell(createPhrase(PRODUCT_QUANTITY_HEADER), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
-        PdfPCell productPriceHeader = buildPdfCell(createPhrase(PRODUCT_PRICE_HEADER), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
-        PdfPCell productTotalPriceHeader = buildPdfCell(createPhrase(PRODUCT_TOTAL_PRICE), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
-
-        table.addCell(productsHeader);
-        table.addCell(urgencyHeader);
-        table.addCell(productQuantityHeader);
-        table.addCell(productPriceHeader);
-        table.addCell(productTotalPriceHeader);
+        addTableHeaders(table, tableHeaders);
 
         generateTableCells(sortedProductList, table);
 
@@ -180,6 +173,17 @@ public class ProductServiceImpl implements ProductService {
         document.close();
 
         return outputStream.toByteArray();
+    }
+
+    private List<PdfPCell> generateTableHeaders() {
+        List<String> headersNames = productTableHeaders.getProductTableHeaders();
+        List<PdfPCell> headersCells = new ArrayList<>();
+
+        for (String header : headersNames) {
+            headersCells.add(buildPdfCell(createPhrase(header), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f));
+        }
+
+        return headersCells;
     }
 
     private String getTotalPrice(List<ProductDto> productDtos) {
@@ -300,6 +304,14 @@ public class ProductServiceImpl implements ProductService {
             table.addCell(quantityCell);
             table.addCell(priceCell);
             table.addCell(totalPriceCell);
+        }
+    }
+
+    private void addTableHeaders(
+            PdfPTable table,
+            List<PdfPCell> headers) {
+        for (PdfPCell header : headers) {
+            table.addCell(header);
         }
     }
 
