@@ -154,14 +154,14 @@ public class ProductServiceImpl implements ProductService {
         PdfWriter.getInstance(document, outputStream);
         document.open();
 
-        PdfPTable table = createNewPdfTable(6);
+        PdfPTable table = createNewPdfTable(10);
 
 
-        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
-        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
-        PdfPCell productQuantityHeader = buildPdfCell(createPhrase(PRODUCT_QUANTITY_HEADER), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
-        PdfPCell productPriceHeader = buildPdfCell(createPhrase(PRODUCT_PRICE_HEADER), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
-        PdfPCell productTotalPriceHeader = buildPdfCell(createPhrase(PRODUCT_TOTAL_PRICE), 1, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell productsHeader = buildPdfCell(createPhrase(PRODUCTS_HEADER_NAME), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
+        PdfPCell urgencyHeader = buildPdfCell(createPhrase(URGENCY_HEADER_NAME), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
+        PdfPCell productQuantityHeader = buildPdfCell(createPhrase(PRODUCT_QUANTITY_HEADER), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
+        PdfPCell productPriceHeader = buildPdfCell(createPhrase(PRODUCT_PRICE_HEADER), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
+        PdfPCell productTotalPriceHeader = buildPdfCell(createPhrase(PRODUCT_TOTAL_PRICE), 2, 12f, Font.BOLD, Element.ALIGN_CENTER, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 4f);
 
         table.addCell(productsHeader);
         table.addCell(urgencyHeader);
@@ -173,13 +173,17 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDto> productDtos = mapperUtils.parseListObjects(productsList, ProductDto.class);
 
-        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: R$ " + ProductUtils.calculateShoppingCartTotalPrice(productDtos).toString().replace('.', ',')), 6, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: R$ " + getTotalPrice(productDtos)), 10, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
         table.addCell(totalPriceCell);
 
         document.add(table);
         document.close();
 
         return outputStream.toByteArray();
+    }
+
+    private String getTotalPrice(List<ProductDto> productDtos) {
+        return ProductUtils.calculateShoppingCartTotalPrice(productDtos).toString().replace('.', ',');
     }
 
     @Override
@@ -285,11 +289,11 @@ public class ProductServiceImpl implements ProductService {
             List<Product> productList,
             PdfPTable table) {
         for (Product product : productList) {
-            PdfPCell productNameCell = generateCell(product, product.getName(), 2, 5f);
-            PdfPCell urgencyCell = generateCell(product, product.getUrgencyLevel().getMessage(), 1, 5f);
-            PdfPCell quantityCell = generateCell(product, product.getProductQuantity().toString(), 1, 5f);
-            PdfPCell priceCell = generateCell(product, "R$ " + product.getProductPrice().toString().replace('.', ','), 1, 5f);
-            PdfPCell totalPriceCell = generateCell(product, "R$ " + product.getProductPrice().toString().replace('.', ','), 1, 5f);
+            PdfPCell productNameCell = generateCell(product, product.getName(), 2, 3f);
+            PdfPCell urgencyCell = generateCell(product, product.getUrgencyLevel().getMessage(), 2, 3f);
+            PdfPCell quantityCell = generateCell(product, product.getProductQuantity().toString(), 2, 3f);
+            PdfPCell priceCell = generateCell(product, "R$ " + product.getProductPrice().toString().replace('.', ','), 2, 3f);
+            PdfPCell totalPriceCell = generateCell(product, "R$ " + product.getProductPrice().toString().replace('.', ','), 2, 3f);
 
             table.addCell(productNameCell);
             table.addCell(urgencyCell);
