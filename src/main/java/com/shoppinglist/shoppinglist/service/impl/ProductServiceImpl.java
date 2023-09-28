@@ -163,7 +163,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductDto> productDtos = mapperUtils.parseListObjects(productsList, ProductDto.class);
 
-        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: R$ " + ProductUtils.getTotalPriceNormalized(productDtos)), 10, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
+        PdfPCell totalPriceCell = buildPdfCell(createPhrase("Total: " + ProductUtils.getTotalPriceNormalized(productDtos)), 10, 12f, Font.BOLD, Element.ALIGN_RIGHT, Element.ALIGN_CENTER, BaseColor.LIGHT_GRAY, 5f);
         table.addCell(totalPriceCell);
 
         document.add(table);
