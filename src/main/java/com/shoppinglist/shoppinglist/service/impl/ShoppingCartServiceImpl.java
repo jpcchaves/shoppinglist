@@ -52,11 +52,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ApiMessageResponse create(ShoppingCartRequestDto request) {
-        ShoppingCart createdShoppingCart = shoppingCartRepository
-                .save(mapperUtils.parseObject(request, ShoppingCart.class));
+        ShoppingCart shoppingCart = mapperUtils.parseObject(request, ShoppingCart.class);
+        ShoppingCart createdShoppingCart = save(shoppingCart);
         return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " "
                 + createdShoppingCart.getName());
     }
+
 
     @Override
     public ApiMessageResponse update(
@@ -66,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setName(request.getName());
         shoppingCart.setDescription(request.getDescription());
 
-        shoppingCartRepository.save(shoppingCart);
+        save(shoppingCart);
 
         return new ApiMessageResponse("Lista de compras atualizada com sucesso!");
     }
@@ -85,6 +86,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByNameContainingIgnoreCase(name);
 
         return mapperUtils.parseListObjects(shoppingCarts, ShoppingCartListDto.class);
+    }
+
+    private ShoppingCart save(ShoppingCart shoppingCart) {
+        return shoppingCartRepository.save(shoppingCart);
     }
 
     private List<ShoppingCart> fetchShoppingCarts() {
