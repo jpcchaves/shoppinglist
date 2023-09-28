@@ -33,7 +33,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public List<ShoppingCartListDto> getAll(String name) {
         List<ShoppingCart> shoppingCarts = new ArrayList<>();
-        if (name == null) {
+        if (isNull(name)) {
             shoppingCarts.addAll(fetchShoppingCarts());
 
             return buildShoppingCartList(shoppingCarts);
@@ -42,7 +42,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCarts.addAll(shoppingCartRepository.findByNameContainingIgnoreCase(name));
         return buildShoppingCartList(shoppingCarts);
     }
-
 
     @Override
     public ShoppingCartListDto getById(Long shoppingCartId) {
@@ -120,4 +119,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                         shoppingCart.getCreatedAt());
     }
 
+    private boolean isNull(String param) {
+        return param == null;
+    }
 }
