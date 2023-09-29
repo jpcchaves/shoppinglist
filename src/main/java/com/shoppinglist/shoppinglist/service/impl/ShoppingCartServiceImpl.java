@@ -3,6 +3,7 @@ package com.shoppinglist.shoppinglist.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shoppinglist.shoppinglist.utils.global.GlobalUtils;
 import org.springframework.stereotype.Service;
 
 import com.shoppinglist.shoppinglist.domain.entities.ShoppingCart;
@@ -19,14 +20,17 @@ import com.shoppinglist.shoppinglist.utils.mapper.MapperUtils;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartFactory shoppingCartFactory;
+    private final GlobalUtils globalUtils;
     private final MapperUtils mapperUtils;
 
     public ShoppingCartServiceImpl(
             ShoppingCartRepository shoppingCartRepository,
             ShoppingCartFactory shoppingCartFactory,
+            GlobalUtils globalUtils,
             MapperUtils mapperUtils) {
         this.shoppingCartRepository = shoppingCartRepository;
         this.shoppingCartFactory = shoppingCartFactory;
+        this.globalUtils = globalUtils;
         this.mapperUtils = mapperUtils;
     }
 
@@ -54,7 +58,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ApiMessageResponse create(ShoppingCartRequestDto request) {
         ShoppingCart shoppingCart = mapperUtils.parseObject(request, ShoppingCart.class);
         ShoppingCart createdShoppingCart = save(shoppingCart);
-        return new ApiMessageResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " "
+        return globalUtils.generateApiResponse("Lista de compras criada com sucesso! " + createdShoppingCart.getId() + " "
                 + createdShoppingCart.getName());
     }
 
@@ -69,7 +73,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         save(shoppingCart);
 
-        return new ApiMessageResponse("Lista de compras atualizada com sucesso!");
+        return globalUtils.generateApiResponse("Lista de compras atualizada com sucesso!");
     }
 
     @Override
@@ -78,7 +82,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         shoppingCartRepository.delete(shoppingCart);
 
-        return new ApiMessageResponse("Lista de compras deletada com sucesso!");
+        return globalUtils.generateApiResponse("Lista de compras deletada com sucesso!");
     }
 
     @Override
@@ -87,6 +91,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
         return mapperUtils.parseListObjects(shoppingCarts, ShoppingCartListDto.class);
     }
+
 
     private ShoppingCart save(ShoppingCart shoppingCart) {
         return shoppingCartRepository.save(shoppingCart);
