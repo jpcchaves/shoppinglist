@@ -107,31 +107,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    private List<Product> findByName(
-            String name,
-            Long shoppingCartId) {
-        return productRepository.findByNameContainingIgnoreCaseAndShoppingCart_Id(name, shoppingCartId);
-    }
-
-    private Product saveProduct(Product product) {
-        return productRepository.save(product);
-    }
-
-    private Product fetchProductById(
-            Long productId,
-            Long shoppingCartId) {
-        return productRepository
-                .findByIdAndShoppingCart_id(productId, shoppingCartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
-    }
-
-    private ShoppingCart fetchShoppingCartById(
-            Long shoppingCartId) {
-        return shoppingCartRepository
-                .findById(shoppingCartId)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado"));
-    }
-
     @Override
     public ProductMinDto getProductById(
             Long shoppingCartId,
@@ -172,6 +147,18 @@ public class ProductServiceImpl implements ProductService {
         return outputStream.toByteArray();
     }
 
+
+    @Override
+    public ApiMessageResponse removeProduct(
+            Long shoppingCartId,
+            Long id) {
+        verifyIfProductExists(shoppingCartId, id);
+
+        productRepository.deleteById(id);
+
+        return new ApiMessageResponse("Produto removido com sucesso!");
+    }
+
     private List<PdfPCell> generateTableHeaders() {
         List<String> headersNames = productTableHeaders.getProductTableHeaders();
         List<PdfPCell> headersCells = new ArrayList<>();
@@ -183,19 +170,30 @@ public class ProductServiceImpl implements ProductService {
         return headersCells;
     }
 
-    private String getTotalPrice(List<ProductDto> productDtos) {
-        return ProductUtils.calculateShoppingCartTotalPrice(productDtos).toString().replace('.', ',');
+
+    private List<Product> findByName(
+            String name,
+            Long shoppingCartId) {
+        return productRepository.findByNameContainingIgnoreCaseAndShoppingCart_Id(name, shoppingCartId);
     }
 
-    @Override
-    public ApiMessageResponse removeProduct(
-            Long shoppingCartId,
-            Long id) {
-        verifyIfProductExists(shoppingCartId, id);
+    private Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
 
-        productRepository.deleteById(id);
+    private Product fetchProductById(
+            Long productId,
+            Long shoppingCartId) {
+        return productRepository
+                .findByIdAndShoppingCart_id(productId, shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+    }
 
-        return new ApiMessageResponse("Produto removido com sucesso!");
+    private ShoppingCart fetchShoppingCartById(
+            Long shoppingCartId) {
+        return shoppingCartRepository
+                .findById(shoppingCartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado"));
     }
 
     private Product buildNewProduct(
