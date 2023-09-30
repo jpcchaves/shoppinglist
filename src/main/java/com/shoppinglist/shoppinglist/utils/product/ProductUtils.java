@@ -1,5 +1,6 @@
 package com.shoppinglist.shoppinglist.utils.product;
 
+import com.shoppinglist.shoppinglist.domain.entities.Product;
 import com.shoppinglist.shoppinglist.payload.dto.product.ProductDto;
 
 import java.math.BigDecimal;
@@ -17,6 +18,10 @@ public class ProductUtils {
         }
 
         return totalPrice;
+    }
+
+    public static String calculateProductTotalPrice(Product product) {
+        return normalizeCurrency(new BigDecimal(product.getProductQuantity()).multiply(product.getProductPrice()));
     }
 
     public static String normalizeCurrency(BigDecimal rawPrice) {

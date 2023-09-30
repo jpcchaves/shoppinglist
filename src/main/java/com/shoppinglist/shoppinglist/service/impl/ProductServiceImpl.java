@@ -292,7 +292,7 @@ public class ProductServiceImpl implements ProductService {
             PdfPCell urgencyCell = generateCell(product, product.getUrgencyLevel().getMessage(), 2, 3f);
             PdfPCell quantityCell = generateCell(product, product.getProductQuantity().toString(), 2, 3f);
             PdfPCell priceCell = generateCell(product, ProductUtils.normalizeCurrency(product.getProductPrice()), 2, 3f);
-            PdfPCell totalPriceCell = generateCell(product, ProductUtils.normalizeCurrency(product.getProductPrice()), 2, 3f);
+            PdfPCell totalPriceCell = generateCell(product, ProductUtils.calculateProductTotalPrice(product), 2, 3f);
 
             table.addCell(productNameCell);
             table.addCell(urgencyCell);
