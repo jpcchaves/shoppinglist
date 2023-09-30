@@ -1,5 +1,6 @@
 package com.shoppinglist.shoppinglist.payload.dto.shoppingcart;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ public class ShoppingCartListDto {
     private String name;
     private String description;
     private int productsAmount;
+    private BigDecimal totalPrice;
     private Date createdAt;
 
     public ShoppingCartListDto() {
@@ -26,6 +28,23 @@ public class ShoppingCartListDto {
         this.name = name;
         this.description = description;
         this.productsAmount = productsAmount;
+        this.createdAt = createdAt;
+    }
+
+    public ShoppingCartListDto(
+            Long id,
+            UUID uuid,
+            String name,
+            String description,
+            int productsAmount,
+            BigDecimal totalPrice,
+            Date createdAt) {
+        this.id = id;
+        this.uuid = uuid;
+        this.name = name;
+        this.description = description;
+        this.productsAmount = productsAmount;
+        this.totalPrice = totalPrice;
         this.createdAt = createdAt;
     }
 
@@ -75,5 +94,13 @@ public class ShoppingCartListDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
