@@ -3,6 +3,7 @@ package com.shoppinglist.shoppinglist.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shoppinglist.shoppinglist.payload.dto.product.ProductDto;
 import com.shoppinglist.shoppinglist.utils.global.GlobalUtils;
 import org.springframework.stereotype.Service;
 
@@ -120,12 +121,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private ShoppingCartListDto buildNewShoppingCart(ShoppingCart shoppingCart) {
         return shoppingCartFactory
-                .createShoppingCart(
+                .createShoppingCartWithTotalPrice(
                         shoppingCart.getId(),
                         shoppingCart.getUuid(),
                         shoppingCart.getName(),
                         shoppingCart.getDescription(),
-                        shoppingCart.getProducts().size(),
+                        mapperUtils.parseListObjects(shoppingCart.getProducts(), ProductDto.class),
                         shoppingCart.getCreatedAt());
     }
 
